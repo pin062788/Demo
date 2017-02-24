@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.LogDAO">
+	
+	<resultMap id="UserLogResult" type="UserLog">
+		<id column="id" property="id" />
+		<result column="type" property="type"/>
+		<result column="time" property="time"/>
+		<result column="message" property="message"/>
+		<result column="userId" property="userId"/>
+		<association property="user" column="userId" resultMap="com.ocellus.platform.dao.UserDAO.UserResult"></association>
+	</resultMap>
+
+    <resultMap id="InterfaceLogResult" type="InterfaceLog">
+		<id column="id" property="id" />
+		<result column="type" property="type"/>
+		<result column="time" property="time"/>
+		<result column="message" property="message"/>
+	</resultMap>
+
+	<resultMap id="SysLogResult" type="SysLog">
+		<id column="id" property="id" />
+		<result column="type" property="type"/>
+		<result column="time" property="time"/>
+		<result column="message" property="message"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="UserLog">
+		insert into tb_userlog(
+		id, 
+		type,
+		time,
+		message,
+		userid
+		) values (
+		#{id, jdbcType=VARCHAR},
+		#{type, jdbcType=VARCHAR},
+		#{time, jdbcType=VARCHAR},
+		#{message, jdbcType=VARCHAR},
+		#{userId, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="searchUserLog"  parameterType="map" resultMap="UserLogResult">
+		select * from tb_userlog t left join tb_user u on u.user_id=t.userid 
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="type != null and type !=''">
+				type = #{domainName}
+			</if>
+			
+		</trim>
+		order by t.time desc
+	</select>
+
+	<select id="searchInterfaceLog"  parameterType="map" resultMap="InterfaceLogResult">
+		select * from TB_INTERFACE_LOG
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="logMessage != null and logMessage !=''">
+                message like '%${logMessage}%'
+			</if>
+            <if test="interfaceType != null and interfaceType !=''">
+                AND message like '%${interfaceType}%'
+			</if>
+
+		</trim>
+		order by time desc
+	</select>
+
+	<select id="searchSysLog"  parameterType="map" resultMap="SysLogResult">
+ 		select * from tb_syslog
+ 		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="type != null and type !=''">
+				type = #{domainName}
+			</if>
+		</trim>
+	</select>
+	
+</mapper>

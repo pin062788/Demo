@@ -1,0 +1,206 @@
+html {
+	overflow-x: hidden;
+}
+
+body {
+	margin: auto 0px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px !important;
+	font-weight: 300;
+}
+
+input {
+	border: 1px solid black;
+}
+
+.main {
+	margin: 0 auto;
+	position: relative;
+	padding-top: 20px;
+}
+
+.bannerbg {
+	background: url(../images/banner_default.jpg) no-repeat
+		rgb(192, 192, 192);;
+	text-align: center;
+	width: 100%;
+	height: 65px;
+	font-size: 12px;
+	color: #d5e1f1;
+	padding-top: 15px;
+}
+
+.bannerbg ul {
+	float: right;
+	width: 70px;
+	cursor: pointer;
+}
+
+.bannerbg :hover {
+	color: #fff;
+}
+
+.bannerbg li {
+	float: none;
+	clear: both;
+}
+
+.menu {
+	background: #f7f9fc;
+	height: 638px;
+	border: 1px solid #a5a5a5;
+	font-size: 12px;
+	float: left;
+	overflow: hidden;
+}
+
+.menu_content {
+	word-wrap: break-word;
+	overflow: hidden;
+}
+
+.menu_on {
+	background: url(../images/tab_on_200.gif) no-repeat;
+	width: 200px;
+	height: 25px;
+	text-align: center;
+	color: #FFF;
+	padding-top: 11px;
+	cursor: pointer;
+}
+
+.menu_off {
+	background: url(../images/tab_off_200.gif) no-repeat;
+	width: 200px;
+	height: 24px;
+	color: #666666;
+	text-align: center;
+	padding-top: 11px;
+	cursor: pointer;
+}
+
+.menu ul {
+	height: 22px;
+	clear: both;
+	float: none;
+	padding-left: 10px;
+	padding-top: 10px;
+	color: #666666;
+	margin-top: 10px;
+}
+
+.menu_text div {
+	float: none;
+	clear: both;
+	height: 100%;
+	padding-left: 30px;
+	line-height: 26px;
+	color: #666666;
+	cursor: pointer;
+}
+
+.menu_text :hover {
+	background-color: #aaa;
+	color: #fff;
+}
+
+.navbg {
+	background: url(../images/navbg.gif) repeat-x;
+	height: 30px;
+	width: 100%;
+	text-align: center;
+	font-size: 12px;
+}
+
+.navbg ul {
+	float: left;
+}
+
+.nav_on {
+	background: url(../images/nav_on.gif) no-repeat;
+	width: 127px;
+	height: 22px;
+	color: #FFF;
+	padding-top: 8px;
+	cursor: pointer;
+}
+
+.nav_off {
+	background: url(../images/nav_off.gif) no-repeat;
+	width: 126px;
+	height: 22px;
+	color: #000;
+	padding-top: 8px;
+	cursor: pointer;
+}
+
+.map_site {
+	color: #fff;
+	float: left;
+	font-size: 12px;
+	height: 55px;
+	padding-top: 6px;
+	padding-left: 10px;
+	background: url(../images/msbg.gif) repeat-x;
+	height: 30px;
+	width: 100%;
+	position: absolute;
+	left: 200px;
+}
+
+.bottombg {
+	background: url(../images/b_bg.jpg) repeat-x;
+	position: absolute;
+	width: 100%;
+	height: 25px;
+	left: 200px;
+}
+
+.clean {
+	clear: both;
+	float: none;
+}
+
+.tab {
+	background: url(../images/tab.gif) no-repeat;
+	width: 54px;
+	height: 19px;
+	float: left;
+	text-align: center;
+	padding-top: 6px;
+	margin-right: 10px;
+}
+
+.menu_icon {
+	background: url(../images/icon.gif);
+	width: 16px;
+	height: 12px;
+	cursor: pointer;
+}
+
+.theme_menu {
+	width: 150px;
+}
+
+.selcls {
+	width: 145px;
+	height: 21.5px;
+}
+
+.errorCls {
+	color: red;
+	text-align: left;
+	line-height: 17px;
+	width: 500px;
+}
+.editButtonCss{    
+    width:100%;
+    height: 20px;
+    margin: 0 0 0 0;
+    margin-left:-40px;
+    list-style:none;
+    }
+.editButtonCss li{float:left;} 
+.toActionColor{
+	background-color:#0078ae
+}

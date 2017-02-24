@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.GroupUserRoleMappingDAO">
+	
+	<resultMap id="GroupUserRoleMappingResult" type="GroupUserRoleMapping">
+		<id column="ID" property="id" />
+		<result column="RELEATED_ID" property="releatedId" />
+		<result column="RELEATED_TYPE" property="releatedType" />
+		<result column="ROLE_ID" property="roleId"/>
+		<result column="CREATE_DATE" property="addDate"/>
+		<result column="CREATE_USER" property="addUser"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="GroupUserRoleMapping">
+		INSERT INTO TB_GROUP_USER_ROLE_MAPPING(
+			ID,
+            RELEATED_ID,
+            RELEATED_TYPE,
+            ROLE_ID
+        ) values(
+         	#{id},
+            #{releatedId, jdbcType=CHAR},
+            #{releatedType, jdbcType=VARCHAR},
+            #{roleId, jdbcType=CHAR}
+        )
+	</insert>
+	<delete id="deleteByReleated">
+		delete from TB_GROUP_USER_ROLE_MAPPING where 
+		RELEATED_ID =  #{releatedId, jdbcType=CHAR} 
+		and RELEATED_TYPE=#{releatedType, jdbcType=VARCHAR} 
+	</delete>
+	
+	<delete id="batchDelete" parameterType="string" >
+		delete from TB_GROUP_USER_ROLE_MAPPING where role_id in
+		<foreach item="roleId" collection="array" open="(" separator="," close=")"> 
+			#{roleId}
+		</foreach> 
+	</delete>
+</mapper>

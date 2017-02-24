@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.RestrictDAO">
+
+	<resultMap id="RestrictResult" type="Restrict">
+		<id column="restrict_id" property="restrictId" />
+		<result column="role_id" property="roleId"/>
+		<result column="table_name" property="tableName"/>
+		<result column="column_name" property="columnName"/>
+		<result column="column_type" property="columnType"/>
+		<result column="opt_code" property="optCode"/>
+		<result column="conn_code" property="connOpt"/>
+		<result column="restrict_value" property="restrictValue"/>
+		<result column="order_name" property="orderNumber"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="Restrict">
+	  	insert into TB_RESTRICT (
+	  	RESTRICT_ID,
+	  	 ROLE_ID, 
+	  	 TABLE_NAME, 
+	  	 COLUMN_NAME, 
+	  	 COLUMN_TYPE, 
+	  	 OPT_CODE, 
+	  	 CONN_CODE, 
+	  	 RESTRICT_VALUE, 
+	  	 ORDER_NUMBER
+	  	 ) 
+	  	 values 
+	  	 (
+	  	 #{restrictId, jdbcType=CHAR},
+	  	 #{roleId, jdbcType=CHAR},
+	  	 #{tableName, jdbcType=VARCHAR},
+	  	 #{columnName, jdbcType=VARCHAR},
+	  	 #{columnType, jdbcType=VARCHAR},
+	  	 #{optCode, jdbcType=VARCHAR},
+	  	 #{connOpt, jdbcType=VARCHAR},
+	  	 #{restrictValue, jdbcType=VARCHAR},
+	  	 #{orderNumber, jdbcType=VARCHAR}
+	  	 )
+		
+		  
+	</insert>
+	<select id="search" parameterType="map" resultMap="RestrictResult">
+		select * from tb_restrict  
+		<where>
+			<if test="roleId != null and roleId != ''">
+				role_id = #{roleId} 
+			</if>
+			<if test="tableName != null and tableName != ''">
+				and table_name = #{tableName} 
+			</if>
+			<if test="columnName != null and columnName != ''">
+				and column_name = #{columnName} 
+			</if>
+		</where>
+		order by table_name, role_id,order_number
+	</select>
+
+	<delete id="delete" parameterType="String">
+		delete from tb_restrict where RESTRICT_ID = #{restrictId}
+	</delete>
+	
+</mapper>

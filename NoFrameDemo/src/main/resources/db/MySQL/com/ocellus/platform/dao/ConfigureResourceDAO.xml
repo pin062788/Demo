@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.ConfigureResourceDAO">
+	
+	<resultMap id="ConfigureResourceResult" type="ConfigureResource">
+		<id column="CONFIGURE_RESOURCE_ID" property="configureResourceId" />
+		<result column="CONFIGURE_RESOURCE_NAME" property="configureResourceName"/>
+		<result column="CONFIGURE_RESOURCE_URL" property="configureResourceUrl"/>
+		<result column="ACTIVATE" property="activate"/>
+		<result column="EDIT_DATE" property="editDate"/>
+		<result column="EDIT_USER" property="editUser"/>
+	</resultMap>
+	<select id="searchName"  parameterType="map" resultMap="ConfigureResourceResult">
+		select * from tb_CONFIGURE_RESOURCE
+		<where>
+			ACTIVATE='1'
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.RoleDAO">
+	
+	<resultMap id="RoleResult" type="Role">
+		<id column="ROLE_ID" property="roleId" />
+		<result column="ROLE_CODE" property="roleCode"/>
+		<result column="ROLE_NAME" property="roleName"/>
+		<result column="REMARK" property="remark"/>
+		<result column="EDIT_DATE" property="editDate"/>
+		<result column="EDIT_USER" property="editUser"/>
+	</resultMap>
+    
+	<insert id="insert" parameterType="Role">
+		insert into tb_role(
+		role_id, 
+		role_code, 
+		role_name,
+		remark, 
+		EDIT_DATE, 
+		EDIT_USER
+		) values (
+		#{roleId, jdbcType=VARCHAR},
+		#{roleCode, jdbcType=VARCHAR},
+		#{roleName, jdbcType=VARCHAR},
+		#{remark, jdbcType=VARCHAR},
+		#{editDate, jdbcType=DATE},
+		#{editUser, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="Role">
+		update tb_role 
+			set role_code = #{roleCode, jdbcType=VARCHAR}, 
+			role_name = #{roleName, jdbcType=VARCHAR}, 
+			remark = #{remark, jdbcType=VARCHAR},
+			EDIT_DATE = #{editDate, jdbcType=DATE},
+			EDIT_USER = #{editUser, jdbcType=VARCHAR}
+		WHERE trim(role_id) = #{roleId}
+	</update>
+	
+	<delete id="batchDelete" parameterType="string" >
+		delete  from tb_role  WHERE  trim(role_id) in
+		<foreach item="roleId" collection="array" open="(" separator="," close=")"> 
+			#{roleId}
+		</foreach> 
+	</delete>
+		
+	<select id="getById" parameterType="String" resultMap="RoleResult">
+		select role_id, 
+		role_code, 
+		role_name,
+		remark, 
+		EDIT_DATE, 
+		EDIT_USER
+		 from tb_role where trim(role_id) = #{roleId}
+	</select>
+	<select id="getByCode" parameterType="String" resultMap="RoleResult">
+		select * from tb_role where trim(role_code) = #{roleCode}
+	</select>
+	<select id="search"  parameterType="map" resultMap="RoleResult">
+ 		select *
+		from tb_role 
+		<where>
+			<if test="roleName != null and roleName !=''">
+				role_name like '%${roleName}%'
+			</if>
+			<if test="roleCode != null and roleCode !=''">
+				AND role_code like '%${roleCode}%'
+			</if>
+		</where>
+	</select>
+	<select id="getUserRoles"  parameterType="string" resultMap="RoleResult">
+ 		SELECT DISTINCT R.* 
+ 		FROM TB_ROLE R
+    	INNER JOIN TB_GROUP_USER_ROLE_MAPPING M ON M.ROLE_ID = R.ROLE_ID 
+    	INNER JOIN TB_USER U ON U.USER_ID = M.RELEATED_ID AND M.RELEATED_TYPE='User'
+		WHERE U.USER_ID = #{userId} 
+	</select>
+	
+	<select id="getGroupRoles"  parameterType="string" resultMap="RoleResult">
+ 		SELECT DISTINCT R.* 
+ 		FROM TB_ROLE R
+    	INNER JOIN TB_GROUP_USER_ROLE_MAPPING M ON M.ROLE_ID = R.ROLE_ID 
+    	INNER JOIN TB_USER_GROUP G ON G.GROUP_ID = M.RELEATED_ID AND M.RELEATED_TYPE='Group'
+		WHERE G.GROUP_ID = #{groupId}
+	</select>
+
+</mapper>

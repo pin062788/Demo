@@ -1,0 +1,102 @@
+html,div,ul,li,dl,dt,dd,p,h1,h2,h3,h4,h5,h6,img,form,table,tr,td,embed,label{margin:0 ;padding:0; border:0;}
+ul li{float:left; list-style:none;}
+html{ overflow-x:hidden; }
+body{ margin:auto 0px; }
+*{ font-family:Arial,Helvetica,sans-serif;}
+
+.main{ 
+width:930px;
+margin:0 auto;
+position:relative; 
+padding-top:20px;
+}
+.index_text{ margin-left:10px; margin-bottom:10px; float:left;}
+.index_textt{ background:url(../images/top.gif) no-repeat; width:444px; height:26px; padding-top:10px; padding-left:10px; font-size:14px;}
+.index_textm{ background:url(../images/m.gif) repeat-y; width:428px; height:220px; padding:15px 13px 10px 13px; font-size:12px; text-align:center;}
+.index_textf{ height:26px; clear:both;}
+.selcls{width:145px;height:21.5px;}
+.errorCls{ color:red; text-align: left;line-height: 17px;width: 500px;}
+
+.validate_error input,
+.validate_error select,
+.validate_error textarea
+{
+	border: 1px solid #FF445B;
+}
+.validate_error div
+{
+	color:#FF445B;
+}
+.ui-state-default .div_navigation
+{
+	top: -150px; 
+	left: 0; 
+	zoom: 1; 
+	position: relative; 
+	color: black; 
+	width: 600px; 
+	display: block;
+	float: right;
+}
+.ui-state-default .div_navigation .span_navigation,.ui-state-default .div_navigation .span_navigation_customer
+{
+	position: relative;	
+	/* 
+	top: 3px; 
+	left: -120px; 	
+	padding:5px 10px  20px 0px;
+	*/	
+	width: 100%; 
+	display: block;
+	float: right;
+}
+.ui-state-default .div_navigation .span_navigation
+{
+	padding:35px 10px 0px 0px;
+}
+.ui-state-default .div_navigation .span_navigation_customer
+{
+	margin-top: 25px;
+	padding:0px 10px 0px 0px;
+}
+.ui-state-default .div_navigation .span_navigation span
+{
+	position: relative;
+	display: block;
+	float: right;
+	padding:0px 0px 0px 10px;
+	width: 80px;
+}
+.ui-state-default .div_navigation .span_navigation span img
+{
+	position:relative;
+	display: block;
+	padding:0;
+	margin:0;
+}
+.ui-state-default .div_navigation .span_navigation span div
+{
+	position: relative;
+	display: block;
+	float: right;
+	height: 30px;
+	width: 50px;
+	padding:0;
+	text-align:center;
+}
+.ui-state-default .div_navigation .span_navigation span p
+{
+	position:absolute;
+	bottom:0px;
+	right:0px;
+	padding:0px;
+	margin:0px;
+}
+
+.ui-state-default .div_navigation .span_navigation_customer a,.ui-state-default .div_navigation .span_navigation_customer font
+{
+	position: relative; 
+	display: block;
+	float: right;
+	padding-left:10px;
+}

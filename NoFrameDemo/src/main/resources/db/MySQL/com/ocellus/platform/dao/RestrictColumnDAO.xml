@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.RestrictColumnDAO">
+
+	<resultMap id="RestrictColumnResult" type="RestrictColumn">
+		<id column="column_id" property="columnId" />
+		<result column="table_id" property="tableId"/>
+		<result column="table_name" property="tableName"/>
+		<result column="column_name" property="columnName"/>
+		<result column="column_desc" property="columnDesc"/>
+		<result column="column_type" property="columnType"/>
+		<result column="data_source" property="dataSource"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="RestrictColumn">
+		insert into tb_restrict_column(
+		column_id,
+		table_id, 
+		column_name, 
+		column_desc,
+		column_type,
+		data_source
+		) 
+		values 
+		(
+		#{columnId, jdbcType=CHAR},
+		#{tableId, jdbcType=CHAR},
+		#{columnName, jdbcType=VARCHAR},
+		#{columnDesc, jdbcType=VARCHAR},
+		#{columnType, jdbcType=VARCHAR},
+		#{dataSource, jdbcType=VARCHAR}
+		)
+		  
+	</insert>
+	<update id="update">
+		update tb_restrict_column set 
+		column_desc=#{columnDesc, jdbcType=VARCHAR},
+		column_type = #{columnType, jdbcType=VARCHAR},
+		data_source = #{dataSource, jdbcType=VARCHAR} 
+		where column_id = #{columnId, jdbcType=CHAR}
+	</update>
+	
+	<delete id="delete">
+		delete from tb_restrict_column where column_id=#{columnId, jdbcType=CHAR}
+	</delete>
+	
+	<select id="search" parameterType="map" resultMap="RestrictColumnResult">
+		select c.*,t.table_name 
+		from tb_restrict_column c 
+		inner join tb_restrict_table t on t.table_id = c.table_id
+		<where>
+			<if test="tableId != null and taleId != ''">
+				c.table_id = #{tableId}
+			</if>
+			<if test="columnName != null and columnName != ''">
+				and column_name = #{columnName}
+			</if>
+		</where>
+		order by column_desc
+	</select>
+	
+	<select id="getById" parameterType="string" resultMap="RestrictColumnResult">
+		select c.*,t.table_name 
+		from tb_restrict_column c 
+		inner join tb_restrict_table t on t.table_id = c.table_id
+		 where column_id = #{columnId}
+	</select>
+	<select id="selectTableColumns" parameterType="map" resultType="string">
+		select column_name from user_tab_columns  c 
+		inner join tb_restrict_table r on upper(r.table_name)=c.TABLE_NAME where r.table_id=#{tableId}
+	</select>
+	<select id="searchDuplicated" parameterType="RestrictColumn" resultMap="RestrictColumnResult">
+		select * from tb_restrict_column where table_id=#{tableId} 
+		and column_name= #{columnName}
+		<if test="columnId != null and columnId !=''">
+        	and trim(column_id) != #{columnId}
+       </if> 
+	</select>
+</mapper>

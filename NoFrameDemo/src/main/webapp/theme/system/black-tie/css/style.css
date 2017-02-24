@@ -1,0 +1,16 @@
+html,div,ul,li,dl,dt,dd,p,h1,h2,h3,h4,h5,h6,img,form,table,tr,td,embed,label{margin:0 ;padding:0; border:0;}
+ul li{float:left; list-style:none;}
+html{ overflow-x:hidden; }
+body{ margin:auto 0px; }
+*{ font-family:simsun;}
+
+.main{ 
+width:930px;
+margin:0 auto;
+position:relative; 
+padding-top:20px;
+}
+.index_text{ margin-left:10px; margin-bottom:10px; float:left;}
+.index_textt{ background:url(../images/top.gif) no-repeat; width:444px; height:26px; padding-top:10px; padding-left:10px; font-size:14px;}
+.index_textm{ background:url(../images/m.gif) repeat-y; width:428px; height:220px; padding:15px 13px 10px 13px; font-size:12px; text-align:center;}
+.index_textf{ height:26px; clear:both;}

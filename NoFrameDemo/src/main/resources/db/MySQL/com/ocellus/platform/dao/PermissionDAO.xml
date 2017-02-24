@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.PermissionDAO">
+
+	<resultMap id="PermissionResult" type="Permission">
+		<id column="permission_id" property="permissionId" />
+		<result column="role_code" property="roleCode"/>
+		<result column="resource_code" property="resourceCode"/>
+		<result column="permission_type" property="permissionType"/>
+		<result column="remark" property="remark"/>
+		<result column="EDIT_DATE" property="editDate"/>
+		<result column="EDIT_USER" property="editUser"/>
+	</resultMap>
+	
+	<insert id="insertBatch" parameterType="list">
+		insert into tb_permission(
+		permission_id, 
+		role_code, 
+		resource_code, 
+		permission_type, 
+		remark, 
+		EDIT_DATE, 
+		EDIT_USER
+		) 
+		values
+		<foreach collection="list" item="permission" index="index" separator=","  >  
+		(
+		#{permission.permissionId, jdbcType=VARCHAR},
+		#{permission.roleCode, jdbcType=VARCHAR},
+		#{permission.resourceCode, jdbcType=VARCHAR},
+		#{permission.permissionType, jdbcType=VARCHAR},
+		#{permission.remark, jdbcType=VARCHAR},
+		#{permission.editDate, jdbcType=DATE},
+		#{permission.editUser, jdbcType=VARCHAR}
+		)
+   		</foreach>  
+	</insert>
+	<delete id="delete" parameterType="string">
+		delete from tb_permission where role_code=#{roleCode, jdbcType=VARCHAR}
+	</delete>
+	<delete id="batchDelete" parameterType="string" >
+		delete from tb_permission where role_code in
+		<foreach item="roleId" collection="array" open="(" separator="," close=")"> 
+			#{roleId}
+		</foreach> 
+	</delete>
+</mapper>

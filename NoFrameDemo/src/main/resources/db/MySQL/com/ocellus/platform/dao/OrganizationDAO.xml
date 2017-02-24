@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.OrganizationDAO">
+	<insert id="insert" parameterType="Organization">
+		insert into TB_ORGANIZATION (
+			org_id,
+			parent_org_id,
+			org_code,
+			org_name,
+			org_desc,
+			org_type,
+			org_funtype_code,
+			org_address,
+			expire,
+			expire_date,
+			org_order,
+			add_user,
+			add_date,
+			edit_user,
+			edit_date
+			
+		) values (
+			#{orgId,jdbcType=CHAR},
+			#{parentOrgId,jdbcType=CHAR},
+			#{orgCode,jdbcType=VARCHAR},
+			#{orgName,jdbcType=VARCHAR},
+			#{orgDesc,jdbcType=VARCHAR},
+			#{orgType,jdbcType=CHAR},
+			#{orgFunctionTypeCode,jdbcType=VARCHAR},
+			#{orgAddress,jdbcType=VARCHAR},
+			#{expire,jdbcType=CHAR},
+			#{expireDate,jdbcType=TIMESTAMP},
+			#{orgOrder,jdbcType=VARCHAR},
+			#{addUser,jdbcType=CHAR},
+			#{addDate,jdbcType=TIMESTAMP},
+			#{editUser,jdbcType=CHAR},
+			#{editDate,jdbcType=TIMESTAMP}
+
+		)
+	</insert>
+	
+	<update id="update" parameterType="Organization">
+		update  TB_ORGANIZATION set 
+			<if test="orgCode!= null">org_code=#{orgCode,jdbcType=VARCHAR},</if>
+			<if test="orgName!= null">org_name=#{orgName,jdbcType=VARCHAR},</if>
+			<if test="orgDesc!= null">org_desc=#{orgDesc,jdbcType=VARCHAR},</if>
+			<if test="parentOrgId!= null">parent_org_id=#{parentOrgId,jdbcType=CHAR},</if>
+			<if test="orgType!= null">org_type=#{orgType,jdbcType=CHAR},</if>
+			<if test="orgFunctionTypeCode != null">org_funtype_code=#{orgFunctionTypeCode,jdbcType=VARCHAR},</if>
+			<if test="orgAddress!= null">org_address=#{orgAddress,jdbcType=VARCHAR},</if>
+			<if test="expire!= null">expire=#{expire,jdbcType=CHAR},</if>
+			<if test="expireDate!= null">expire_date=#{expireDate,jdbcType=TIMESTAMP},</if>
+			<if test="orgOrder!= null">org_order=#{orgOrder,jdbcType=VARCHAR},</if>
+			<if test="isDelete">scbj='X',</if>
+			edit_user=#{editUser,jdbcType=CHAR},
+			edit_date=#{editDate,jdbcType=TIMESTAMP}
+		where org_id=#{orgId,jdbcType=CHAR}
+	</update>
+	
+	<select id="search" resultMap="OrganizationResult">
+		select * from TB_ORGANIZATION
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			scbj is null
+			<if test=" orgFunctionTypeCode != null and orgFunctionTypeCode  != '' ">
+				and org_funtype_code = #{orgFunctionTypeCode}
+			</if>
+		</trim>
+	</select>
+	<select id="selectAll" resultMap="OrganizationResult">
+		select * from TB_ORGANIZATION
+	</select>
+	
+	<select id="searchByParentId"  parameterType="String" resultMap="OrganizationResult">
+		select * from TB_ORGANIZATION WHERE trim(parent_org_id)= trim(#{parentId}) 
+	</select>
+	
+	<select id="getById"  parameterType="String" resultMap="OrganizationResult">
+		select * from TB_ORGANIZATION WHERE trim(org_id)= trim(#{id}) 
+	</select>
+	<select id="getByCode"  parameterType="String" resultMap="OrganizationResult">
+		select * from TB_ORGANIZATION WHERE trim(org_code)= trim(#{code}) and scbj is null
+	</select>
+	<select id="getChildTreeNodes"  parameterType="String" resultMap="orgTreeNode">
+		select o.org_id,o.parent_org_id,o.org_name,
+		case
+			when son.cnt is null or son.cnt = 0 then 'false'
+			else 'true'
+		end is_parent
+		from TB_ORGANIZATION o 
+		left join (
+			select count(org_id) as cnt,parent_org_id from TB_ORGANIZATION where scbj is null group by parent_org_id 
+		) son on son.parent_org_id = o.org_id
+		WHERE trim(o.parent_org_id)= trim(#{parentId}) and scbj is null
+	</select>
+	
+		<resultMap id="OrganizationResult" type="Organization">
+		<id column="org_id" property="orgId" />
+		<result column="parent_org_id" property="parentOrgId" />
+		<result column="org_code" property="orgCode" />
+		<result column="org_name" property="orgName" />
+		<result column="org_desc" property="orgDesc" />
+		<result column="org_type" property="orgType" />
+		<result column="org_funtype_code" property="orgFunctionTypeCode" />
+		<result column="org_address" property="orgAddress" />
+		<result column="expire" property="expire" />
+		<result column="expire_date" property="expireDate" />
+		<result column="org_order" property="orgOrder" />
+		<result column="add_user" property="addUser" />
+		<result column="add_date" property="addDate" />
+		<result column="edit_user" property="editUser" />
+		<result column="edit_date" property="editDate" />
+		<result column="scbj" property="isDelete" />
+		<association property="parentOrg" javaType="Organization" column="parent_org_id" select="getById"/>  
+	</resultMap>
+	
+	<resultMap id="ZYGSResult" type="Organization">
+		<result column="org_code" property="orgCode" />
+		<result column="org_name" property="orgName" />
+	</resultMap>
+	
+	<resultMap id="orgTreeNode" type="TreeNode">
+		<id column="org_id" property="id" />
+		<result column="parent_org_id" property="pId" />
+		<result column="org_name" property="text" />
+		<result column="is_parent" property="isParent" />
+	</resultMap>
+	
+	<sql id="ZYGSColumns">
+		org.org_code,
+		org.org_name
+	</sql>
+</mapper>
