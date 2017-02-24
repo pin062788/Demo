@@ -97,7 +97,7 @@
                 return;
             }
             if (nodes.length == 1) {
-                $.loadDiv("org_form_div", "${ctx}/resource/edit.do", {resourceId: nodes[0].resourceId}, "post");
+                $.loadDiv("org_form_div", "${ctx}/organization/edit.do", {orgId: nodes[0].id}, "post");
             }
             else {
                 alert("请选择一个节点。");
@@ -167,7 +167,6 @@
     <tr>
         <td width="20%">
             <div>
-
                 <div style="margin:5px 0;overflow:auto;height:550px;width:100%;background:#fff;position:">
                     <ul id="orgTree_ul" class="ztree"></ul>
                 </div>
@@ -175,9 +174,7 @@
         </td>
         <td width="60%">
             <div class="ui-widget-content">
-
                 <div id="org_form_div" style="margin:5px 0;overflow:auto;height:550px;width:100%;background:#fff;">
-
                 </div>
             </div>
         </td>
