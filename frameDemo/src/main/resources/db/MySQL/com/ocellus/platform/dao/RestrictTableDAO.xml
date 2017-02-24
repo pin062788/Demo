@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.RestrictTableDAO">
+
+	<resultMap id="RestrictTableResult" type="RestrictTable">
+		<id column="table_id" property="tableId" />
+		<result column="table_name" property="tableName"/>
+		<result column="table_desc" property="tableDesc"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="RestrictTable">
+		insert into tb_restrict_table(
+		table_id, 
+		table_name, 
+		table_desc
+		) 
+		values 
+		(
+		#{tableId, jdbcType=CHAR},
+		#{tableName, jdbcType=VARCHAR},
+		#{tableDesc, jdbcType=VARCHAR}
+		)
+		  
+	</insert>
+	<update id="update">
+		update tb_restrict_table 
+		set table_desc= #{tableDesc, jdbcType=VARCHAR}  
+		where table_id = #{tableId, jdbcType=CHAR}
+	
+	</update>
+	<select id="getById" parameterType="string" resultMap="RestrictTableResult">
+		select * from tb_restrict_table where table_id = #{tableId, jdbcType=CHAR}
+	</select>
+	
+	<select id="search" parameterType="map" resultMap="RestrictTableResult">
+		select * from tb_restrict_table order by table_desc
+	</select>
+	<select id="searchDuplicated" parameterType="RestrictTable" resultMap="RestrictTableResult">
+       select * from tb_restrict_table where trim(TABLE_NAME) = #{tableName}
+       <if test="tableId != null and tableId !=''">
+           		 and trim(table_id) != #{tableId}
+       </if> 
+      
+	</select>
+	<select id="selectAllUserTable" parameterType="map" resultType="string">
+		select table_name from user_tables
+	</select>
+	<delete id="delete">
+		delete from tb_restrict_table where table_id =#{tableId, jdbcType=CHAR}
+	</delete>
+</mapper>

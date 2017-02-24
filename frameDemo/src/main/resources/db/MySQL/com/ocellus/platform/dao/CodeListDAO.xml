@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.CodeListDAO">
+
+	<resultMap id="CodeListResult" type="CodeList">
+		<result column="code_key" property="codeKey"/>
+		<result column="code_value" property="codeValue"/>
+		<result column="code_value2" property="codeValue2"/>
+		<result column="code_value3" property="codeValue3"/>
+	</resultMap>
+	
+	
+	<select id="getCodeList" parameterType="NativeSQL" resultMap="CodeListResult">
+		${sql}
+	</select>
+</mapper>

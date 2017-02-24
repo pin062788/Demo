@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.ReferenceDAO">
+
+
+    <resultMap id="referenceResult" type="Reference">
+        <id column="id" property="id"></id>
+        <result column="parent_id" property="parentId"/>
+        <result column="code" property="code"/>
+        <result column="code_desc" property="codeDesc"/>
+        <result column="activate" property="activate"/>
+        <result column="is_parent" property="isParent"/>
+        <result column="group_name" property="groupName"/>
+        <result column="EDIT_DATE" property="editDate"/>
+        <result column="EDIT_USER" property="editUser" />
+        <result column="order_key" property="orderKey" />
+    </resultMap>
+
+    <resultMap id="resultMap" type="map">
+        <result column="code" property="code"/>
+        <result column="code_desc" property="codeDesc"/>
+    </resultMap>
+	<!-- 
+	<resultMap id="provinceResult" type="com.ocellus.lmep.model.Province">
+        <id column="province_code" property="provinceCode"></id>
+        <result column="province_name" property="provinceName"/>
+        <result column="pinyin" property="provincePinyin"/>
+    </resultMap>
+    
+	<resultMap id="cityResult" type="com.ocellus.lmep.model.City">
+        <id column="city_code" property="cityCode"></id>
+        <result column="city_name" property="cityName"/>
+        <result column="province_code" property="provinceCode"/>
+    </resultMap>
+    
+	<resultMap id="areaResult" type="com.ocellus.lmep.model.Area">
+        <id column="area_code" property="areaCode"></id>
+        <result column="area_name" property="areaName"/>
+        <result column="city_code" property="cityCode"/>
+    </resultMap>
+     -->
+    <insert id="insert" parameterType="Reference">
+        insert into tb_reference
+         (id,parent_id,code,code_desc,activate,is_parent,group_name,EDIT_DATE,EDIT_USER,order_key)
+        values(
+        #{id},
+        #{parentId,jdbcType=CHAR},
+        #{code,jdbcType=VARCHAR},
+        #{codeDesc,jdbcType=VARCHAR},
+        #{activate,jdbcType=CHAR},
+        #{isParent,jdbcType=CHAR},
+        #{groupName,jdbcType=VARCHAR},
+        #{editDate,jdbcType=TIMESTAMP},
+        #{editUser,jdbcType=CHAR},
+        #{orderKey,jdbcType=NUMERIC}
+        )
+    </insert>
+
+    <update id="update" parameterType="Reference">
+        update tb_reference set
+        parent_id = #{parentId,jdbcType=CHAR},
+        code = #{code,jdbcType=VARCHAR},
+        code_desc = #{codeDesc,jdbcType=VARCHAR},
+        activate = #{activate, jdbcType=CHAR},
+        group_name = #{groupName, jdbcType=VARCHAR},
+        EDIT_DATE = #{editDate,jdbcType=TIMESTAMP},
+        EDIT_USER = #{editUser,jdbcType=CHAR},
+        order_key = #{orderKey,jdbcType=NUMERIC}
+        where id = #{id}
+    </update>
+
+    <select id="getById" parameterType="string" resultMap="referenceResult">
+        select * from tb_reference where id = #{id} ORDER BY order_key asc
+    </select>
+
+    <select id="getByCode" parameterType="string" resultType="hashmap">
+        select * from tb_reference where code = #{code} ORDER BY order_key asc
+    </select>
+    
+    <select id="getByGroupName" parameterType="string" resultMap="referenceResult">
+        select code,code_desc from tb_reference where group_name = #{groupName} ORDER BY order_key asc
+    </select>
+    
+    <select id="getAllSubNodes" parameterType="string" resultMap="referenceResult">
+        select * from tb_reference where parent_id = #{id} ORDER BY order_key asc
+    </select>
+    
+    <select id="getSubNodes" parameterType="String" resultMap="referenceResult">
+    	SELECT leaf.* FROM tb_reference parent INNER JOIN tb_reference leaf ON parent.id = leaf.parent_id
+		WHERE parent.code = #{parentCode} AND leaf.activate = '1'
+		ORDER BY leaf.order_key asc
+    </select>
+    
+    <select id="getAllRootNodes" parameterType="string" resultMap="referenceResult">
+        select * from tb_reference where parent_id is null ORDER BY order_key asc
+    </select>
+
+    <select id="getRootNode" parameterType="string" resultMap="referenceResult">
+        select * from tb_reference where code = #{code} ORDER BY order_key asc
+    </select>
+
+    <select id="selectAll" parameterType="string" resultMap="referenceResult">
+        select * from tb_reference ORDER BY order_key asc
+    </select>
+
+    <delete id="delete" parameterType="string" >
+        delete from tb_reference where id=#{id}
+    </delete>
+    
+    <select id="getProvincePinyin" parameterType="string" resultType="String">
+    	SELECT pinyin FROM tb_province WHERE province_code = #{provinceCode}
+    </select>
+    <!-- 
+    <select id="getProvinces" parameterType="String" resultMap="provinceResult">
+        select * from tb_province
+    </select>
+    <select id="getCitys" parameterType="String" resultMap="cityResult">
+        select * from tb_city where province_code = #{ProvinceCode}
+    </select>
+    <select id="getCityByDesc" parameterType="String" resultMap="cityResult">
+        select * from tb_city where city_name like '%'|| #{cityName} ||'%'
+    </select>
+    <select id="getAreas" parameterType="String" resultMap="areaResult">
+        select * from tb_area where city_code = #{CityCode}
+    </select>
+
+    <select id="getProvinceByName" parameterType="String" resultMap="provinceResult">
+        select * from tb_province where province_name like  '%'|| #{provinceName} ||'%'
+    </select>
+    -->
+    <!-- 获得任务事件名称lhc -->
+	<select id="getEventName" resultMap="referenceResult">
+		SELECT leaf.id, leaf.code, leaf.code_desc 
+		FROM tb_reference parent 
+		INNER JOIN tb_reference leaf 
+		ON parent.id = leaf.parent_id 
+		WHERE parent.code = 'taskEvent' AND leaf.activate='1'
+	</select>
+</mapper>

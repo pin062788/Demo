@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.UserGroupDAO">
+	
+	<resultMap id="UserGroupResult" type="UserGroup">
+		<id column="group_id" property="groupId" />
+		<result column="group_name" property="groupName"/>
+		<result column="group_desc" property="groupDesc"/>
+		<result column="add_date" property="addDate"/>
+		<result column="add_USER" property="addUser"/>
+		<result column="EDIT_DATE" property="editDate"/>
+		<result column="EDIT_USER" property="editUser"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="UserGroup">
+		INSERT INTO TB_USER_GROUP(
+            GROUP_ID,
+            GROUP_NAME,
+            GROUP_DESC,
+            add_date,
+            add_USER,
+            EDIT_DATE,
+            EDIT_USER
+        ) values(
+            #{groupId},
+            #{groupName, jdbcType=VARCHAR},
+            #{groupDesc, jdbcType=VARCHAR},
+            #{addDate, jdbcType=DATE},
+            #{addUser, jdbcType=CHAR},
+            #{editDate, jdbcType=DATE},
+            #{editUser, jdbcType=CHAR}
+        )
+	</insert>
+	
+	<update id="update" parameterType="UserGroup">
+		UPDATE TB_USER_GROUP SET
+		GROUP_NAME = #{groupName, jdbcType=VARCHAR},
+		GROUP_DESC = #{groupDesc, jdbcType=VARCHAR},
+		EDIT_DATE = #{editDate, jdbcType=TIMESTAMP},
+		EDIT_USER = #{editUser, jdbcType=VARCHAR} 
+		WHERE TRIM(GROUP_ID) = #{groupId}
+	</update>
+	
+		
+	<select id="getById" parameterType="String" resultMap="UserGroupResult">
+		select * from TB_USER_GROUP where trim(GROUP_ID) = #{groupId}
+	</select>
+	
+	<select id="searchDuplicated" parameterType="UserGroup" resultMap="UserGroupResult">
+       select * from TB_USER_GROUP where trim(GROUP_NAME) = #{groupName}
+       <if test="groupId != null and groupId !=''">
+           		 and trim(GROUP_ID) != #{groupId}
+            </if> 
+      
+	</select>
+	
+	<select id="getUserGroups" parameterType="UserGroup" resultMap="UserGroupResult">
+       select * from TB_USER_GROUP G 
+       INNER JOIN TB_GROUP_USER_MAPPING GU ON GU.GROUP_ID=G.GROUP_ID
+        where trim(GU.USER_ID) = #{userId}
+	</select>
+	
+	<select id="search" parameterType="Map" resultMap="UserGroupResult">
+        select DISTINCT G.* 
+        from TB_USER_GROUP G
+        <where>
+            <if test="groupName != null and groupName !=''">
+           		GROUP_NAME like '%'||#{groupName}||'%'
+            </if>
+        </where>
+	</select>
+	
+	<delete id="deleteById" parameterType="String">
+		delete from TB_USER_GROUP where trim(GROUP_ID) = #{id}
+	</delete>
+	
+</mapper>

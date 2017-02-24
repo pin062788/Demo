@@ -1,0 +1,34 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd ">
+   
+	<bean id="authorizingRealm" class="com.ocellus.platform.realm.PlatformAuthorizingRealm">
+		<property name="cachingEnabled" value="true"/>
+  		<property name="cacheManager" ref="cacheManager"/>
+	</bean> 
+   	<bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager"> 
+		<property name="realm" ref="authorizingRealm"/> 
+	</bean>
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"> 		
+		<property name="securityManager" ref="securityManager"/> 	
+	</bean> 
+	
+   <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean"> 
+   		<property name="securityManager" ref="securityManager"/> 
+   		<property name="loginUrl" value="/login.jsp"/>
+   		<property name="unauthorizedUrl" value="/permissionDenied.jsp" />
+   		<property name="filterChainDefinitions">  
+	        <value>
+				/main/loginAuth.do = anon
+	            /main/getUserLogin.do = anon   
+	            /script/** = anon
+	            /image/** = anon
+				/images/** = anon
+	            /css/** = anon
+	            /** = authc 
+	            /permissionDenied.jsp=logout 
+	       </value>  
+  		</property>  
+	</bean>
+</beans>

@@ -1,0 +1,52 @@
+#bgclock{
+    font-weight: bold;
+    font-size: 14px;
+    color:white;
+}
+/*---------查询条件div start-------------*/
+.criteria_float_div {
+    float:left;
+    width:100%;
+    margin:0px;
+    height:auto;
+    overflow: hidden;
+}
+
+.criteria_float_div ul{
+    float:left;
+    list-style:none;
+    width:100%;
+    padding:0;
+    border:0;
+    margin: 0px;
+    text-align: justify;
+}
+
+.criteria_float_div ul li{
+    FLOAT:left;
+    padding:1px 1px 1px 1px;
+    list-style:none;
+    vertical-align: inherit;
+    min-width:230px;
+    white-space: nowrap;
+    display: inline;
+}
+
+.criteria_float_div ul li label{
+    display:inline-block;
+    min-width:80px;
+    text-align:left;
+}
+.criteria_float_div ul li select{
+    width:142px;
+}
+.criteria_float_div ul li input{
+    width:140px;
+}
+.criteria_float_div ul li button{
+    margin-left:1px;
+}
+.criteria_float_div ul .queryButton{
+    min-width:40px;
+}
+/*---------查询条件div end-------------*/

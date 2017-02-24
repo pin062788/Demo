@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.UserDAO">
+	
+	<resultMap id="UserResult" type="User">
+		<id column="USER_ID" property="userId" />
+		<result column="USER_NAME" property="userName"/>
+		<result column="PASSWORD" property="password"/>
+		<result column="RELATED_TYPE" property="relatedType"/>
+		<result column="RELATED_ID" property="relatedId"/>
+		<result column="CREATE_DATE" property="addDate"/>
+		<result column="CREATE_USER" property="addUser"/>
+		<result column="EDIT_DATE" property="editDate"/>
+		<result column="EDIT_USER" property="editUser"/>
+		<result column="USER_RELATED_NAME" property="relatedName"/>
+		<result column="configure" property="configure"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="User">
+		insert into tb_user(
+            USER_ID,
+            USER_NAME,
+            PASSWORD,
+            RELATED_TYPE,
+            RELATED_ID,
+            ADD_DATE,
+            ADD_USER,
+            EDIT_DATE,
+            EDIT_USER,
+            USER_RELATED_NAME
+        ) values(
+            #{userId},
+            #{userName, jdbcType=VARCHAR},
+            #{password, jdbcType=VARCHAR},
+            #{relatedType, jdbcType=VARCHAR},
+            #{relatedId, jdbcType=VARCHAR},
+            #{addDate, jdbcType=TIMESTAMP},
+            #{addUser, jdbcType=CHAR},
+            #{editDate, jdbcType=TIMESTAMP},
+            #{editUser, jdbcType=CHAR},
+            #{relatedName, jdbcType=NVARCHAR}
+        )
+	</insert>
+	
+	<update id="update" parameterType="User">
+		UPDATE TB_USER SET
+		USER_NAME = #{userName, jdbcType=VARCHAR},
+		PASSWORD = #{password, jdbcType=VARCHAR},
+		RELATED_TYPE = #{relatedType, jdbcType=VARCHAR},
+        RELATED_ID = #{relatedId, jdbcType=VARCHAR},
+		EDIT_DATE = #{editDate, jdbcType=TIMESTAMP},
+		EDIT_USER = #{editUser, jdbcType=VARCHAR},
+		USER_RELATED_NAME=#{relatedName, jdbcType=NVARCHAR} 
+		WHERE TRIM(USER_ID) = #{userId}
+	</update>
+
+	<sql id="selectUser">
+		select u.USER_ID,
+			u.USER_NAME,
+			u.PASSWORD,
+			u.RELATED_TYPE,
+			u.RELATED_ID,
+			u.ADD_DATE,
+			u.ADD_USER,
+			u.EDIT_DATE,
+			u.EDIT_USER,
+			u.configure,
+			case when ISNULL(u.user_related_name) THEN e.EMPLOYEE_MC
+			ELSE  u.user_related_name 	END   as user_related_name
+		from tb_user u
+		LEFT JOIN tb_employee e ON e.EMPLOYEE_ID = u.related_id AND e.ACTIVATE = '1'
+	</sql>
+		
+	<select id="getById" parameterType="String" resultMap="UserResult">
+		<include refid="selectUser"/>
+		where trim(u.user_id) = #{userId}
+	</select>
+	<select id="getByUserName" parameterType="String" resultMap="UserResult">
+		<include refid="selectUser"/>
+		where trim(u.USER_NAME) = #{userName}
+	</select>
+	<select id="searchDuplicated" parameterType="User" resultMap="UserResult">
+		<include refid="selectUser"/>
+		where trim(u.USER_NAME) = #{userName}
+		<if test="userId != null and userId !=''">
+        	and trim(u.user_id) != #{userId}
+        </if> 
+	</select>
+	<select id="search" parameterType="Map" resultMap="UserResult">
+		<include refid="selectUser"/>
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="userName != null and userName !=''">
+           		u.user_name like '%'||#{userName}||'%'
+            </if>
+            <if test="relatedName != null and relatedName !=''">
+           		and e.EMPLOYEE_MC like '%'||#{relatedName}||'%'
+            </if>
+        </trim>
+	</select>
+	
+	<select id="getGroupUsers" parameterType="String" resultMap="UserResult">
+        select distinct u.USER_ID,
+			u.USER_NAME,
+			u.PASSWORD,
+			u.RELATED_TYPE,
+			u.RELATED_ID,
+			u.ADD_DATE,
+			u.ADD_USER,
+			u.EDIT_DATE,
+			u.EDIT_USER,
+			u.configure,
+			case when ISNULL(u.user_related_name) THEN e.EMPLOYEE_MC
+			ELSE  u.user_related_name 	END   as user_related_name
+		from tb_user u
+		LEFT JOIN tb_employee e ON e.EMPLOYEE_ID = u.related_id AND e.ACTIVATE = '1'
+        inner join tb_group_user_mapping m on m.user_id = u.user_id
+        where m.group_id=#{groupId}
+	</select>
+	
+	<update id="edit" parameterType="User">
+		UPDATE TB_USER SET
+		CONFIGURE=#{configure, jdbcType=NVARCHAR}
+		WHERE TRIM(USER_ID) = #{userId}
+	</update>
+</mapper>

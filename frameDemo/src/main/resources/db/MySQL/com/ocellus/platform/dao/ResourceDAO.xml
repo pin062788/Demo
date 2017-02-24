@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.ResourceDAO">
+	
+	<resultMap id="ResourceResult" type="Resource">
+		<id column="resource_id" property="resourceId" />
+		<result column="resource_code" property="resourceCode"/>
+		<result column="parent_resource_code" property="parentResourceCode"/>
+		<result column="parent_module_code" property="parentModuleCode"/>
+		<result column="resource_name" property="resourceName"/>
+		<result column="resource_desc" property="resourceDesc"/>
+		<result column="resource_type" property="resourceType"/>
+		<result column="resource_type_desc" property="resourceTypeDesc"/>
+		<result column="order_number" property="orderNumber"/>
+		<result column="resource_url" property="resourceUrl"/>
+		<result column="resource_sn" property="resourceSn"/>
+		<result column="resource_img" property="resourceImg"/>
+		<result column="EDIT_DATE" property="editDate"/>
+		<result column="EDIT_USER" property="editUser"/>
+		<result column="active_module" property="activeModule"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="Resource">
+		insert into tb_resource(
+		resource_id, 
+		resource_code,
+		parent_resource_code,
+		parent_module_code,
+		resource_name,
+		resource_desc,
+		resource_type,
+		resource_url,
+		resource_sn,
+		order_number,
+		EDIT_DATE,
+		EDIT_USER
+		) values (
+		#{resourceId, jdbcType=VARCHAR},
+		#{resourceCode, jdbcType=VARCHAR},
+		#{parentResourceCode, jdbcType=VARCHAR},
+		#{parentModuleCode, jdbcType=VARCHAR},
+		#{resourceName, jdbcType=VARCHAR},
+		#{resourceDesc, jdbcType=VARCHAR},
+		#{resourceType, jdbcType=VARCHAR},
+		#{resourceUrl, jdbcType=VARCHAR},
+		#{resourceSn, jdbcType=VARCHAR},
+		#{orderNumber, jdbcType=CHAR},
+		#{editDate, jdbcType=TIMESTAMP},
+		#{editUser, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="Resource">
+		update tb_resource set
+		resource_code = #{resourceCode, jdbcType=VARCHAR},
+		parent_resource_code = #{parentResourceCode, jdbcType=VARCHAR},
+		parent_module_code = #{parentModuleCode, jdbcType=VARCHAR},
+		resource_name = #{resourceName, jdbcType=VARCHAR},
+		resource_desc = #{resourceDesc, jdbcType=VARCHAR},
+		resource_type = #{resourceType, jdbcType=VARCHAR},
+		resource_url = #{resourceUrl, jdbcType=VARCHAR},
+		resource_sn = #{resourceSn, jdbcType=VARCHAR},
+		order_number = #{orderNumber, jdbcType=CHAR},
+		EDIT_DATE = #{editDate, jdbcType=TIMESTAMP},
+		EDIT_USER = #{editUser, jdbcType=VARCHAR} 
+		where trim(resource_id) = #{resourceId}
+	</update>
+	
+	<delete id="batchDelete" parameterType="string" >
+		delete from tb_resource  WHERE  trim(resource_id) in
+		<foreach item="resourceId" collection="array" open="(" separator="," close=")"> 
+			#{resourceId}
+		</foreach> 
+	</delete>
+	
+	<delete id="deleteByCode" parameterType="string" >
+		delete from tb_resource WHERE resource_code = #{resourceCode}
+	</delete>
+		
+	<select id="getById" parameterType="String" resultMap="ResourceResult">
+		select *
+		from tb_resource where trim(resource_id) = #{resourceId}
+	</select>
+	
+	<select id="getByCode" parameterType="String" resultMap="ResourceResult">
+		select * from tb_resource where trim(resource_code) = #{resourceCode}
+	</select>
+	
+	<select id="search"  parameterType="map" resultMap="ResourceResult">
+ 		select 
+		res.*,
+		ref.code_desc resource_type_desc 
+		from tb_resource res
+		left outer join tb_reference ref on ref.group_name = 'resourceType' and ref.code = res.resource_type
+		<where>
+			<if test="resourceName != null and resourceName !=''">
+				res.resource_name like '%${resourceName}%'
+			</if>
+			<if test="resourceCode != null and resourceCode !=''">
+				AND res.resource_code like '%${resourceCode}%'
+			</if>
+			<if test="resourceType != null and resourceType !=''">
+				AND res.resource_type = #{resourceType}
+			</if>
+		</where>
+		order by res.order_number
+	</select>
+	
+	<select id="findByRoleId"  parameterType="string" resultMap="ResourceResult">
+ 		select resource_id, 
+	    r.resource_code,
+	    parent_resource_code,
+	    resource_name,
+	    resource_desc,
+	    resource_type,
+	    resource_url,
+	    resource_sn,
+	    r.EDIT_DATE,
+	    r.EDIT_USER
+	    from tb_resource r
+	    inner join tb_permission p on p.resource_code = r.resource_code
+	    inner join tb_role role on role.role_id = p.role_code 
+		where role.role_id = #{roleId}
+	</select>
+	
+	<select id="findUserResources"  parameterType="Role" resultMap="ResourceResult">
+ 		select distinct r.*
+	    from tb_resource r
+	    inner join tb_permission p on p.resource_code = r.resource_code
+	    inner join tb_role role on role.role_id = p.role_code 
+		where role.role_id in 
+		<foreach item="role" collection="array" open="(" separator="," close=")"> 
+			#{role.roleId}
+		</foreach> 
+	
+		order by order_number
+	</select>
+	
+	<select id="findMenuResourceByUserName"  parameterType="string" resultMap="ResourceResult">
+ 		select distinct r.*
+	    from tb_resource r
+	    inner join tb_permission p on p.resource_code = r.resource_code
+	    inner join tb_role role on role.role_id = p.role_code 
+	    inner join tb_user_role_mapping urm on urm.role_id = role.role_id
+	    inner join tb_user on tb_user.user_id =  urm.user_id
+		where tb_user.user_name = #{userName} and r.resource_type='01'
+		order by order_number
+	</select>
+	
+	<select id="searchByParentCode" parameterType="String" resultMap="ResourceResult">
+ 		select * from tb_resource where parent_resource_code = #{parentResouceCode}  order by order_number
+	</select>
+	
+	<select id="selectAll" resultMap="ResourceResult">
+ 		select * from tb_resource order by order_number
+	</select>
+	<!-- 快捷菜单 -->
+	<select id="selectShortcutMenu" resultMap="ResourceResult">
+	select * from
+	(
+         select distinct resource_name,resource_url,resource_type, ACTIVE_MODULE, msgCount.coun
+         from tb_resource 
+         inner join (select count(message) as coun, message from tb_userlog where userid=#{userId} group by message) msgCount on msgCount.message = tb_resource.resource_name 
+         where 
+         resource_type='01' and  
+         resource_url is not null and  
+         ACTIVE_MODULE =1
+         order by msgCount.coun desc
+        ) tb
+			<if test="showCount != null and showCount !=''">
+				<![CDATA[	limit #{showCount}]]>
+			</if>
+			 <if test="showCount == null or showCount ==''">
+				<![CDATA[	limit 15 ]]>
+			</if>
+	</select>
+
+	<update id="activeModule" parameterType="String" >
+		update tb_resource set active_module = '1' where parent_module_code in 
+		(select parent_module_code from tb_resource where parent_resource_code='0' and resource_name in 
+			<foreach collection="array" index="index" item="resourceName" open="(" separator="," close=")">
+				#{resourceName}
+			</foreach>
+		)
+	</update>
+	<update id="inactiveModule">
+		update tb_resource set active_module = '0' where active_module = '1'
+	</update>
+	
+</mapper>

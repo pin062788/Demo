@@ -1,0 +1,81 @@
+html, body {
+	background: #FFFFFF;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+/***�������ֿ�ʼ****/
+.container {
+	background: #999;
+	height: 100%;
+	margin: 0 auto;
+	width: 100%;
+	max-width: 9999px;
+	min-width: 700px;
+	_width: 700px; /* min-width for IE6 */
+}
+.pane {
+	display: none; /* will appear when layout inits */
+}
+.ui-layout-pane {   
+     background: #ffffff;  
+     border:     0px solid #8db2e3;  
+     padding:    0px;   
+     overflow:   auto;
+}
+.ui-layout-north {
+	overflow: hidden;
+}
+/***�������ֽ���****/
+
+/***Tab ��ʽ***/
+.tabsUl{
+	background-color: #17B4EB !important;
+}
+
+/***�ַ�����ʽ****/
+.ui-accordion-header{
+	color: #000;
+}
+.ui-accordion-header-active{
+	color: #fff !important; 
+	background-color: #17B4EB;
+}
+/***Tab��ʽ****/
+.ui-tabs .tabsUl li, .ui-tabs .tabsUl li .ui-tabs-anchor, .ui-tabs .tabsUl li .ui-icon-close{
+	background-color: #EBF1FB;
+	color: #000 !important;
+	margin-bottom: 1px;
+}
+.ui-tabs .tabsUl .ui-tabs-active, .ui-tabs .tabsUl .ui-tabs-active .ui-tabs-anchor, .ui-tabs .tabsUl .ui-tabs-active .ui-icon-close{
+	background-color: #fff !important;
+	color: #000 !important;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active{
+	border: 1px solid #fff !important;
+}
+
+.bannerbg {
+	background: url(images/banner_start.jpg) no-repeat rgb(176, 215, 232);
+	text-align: center;
+	width: 100%;
+	height: 60px;
+	font-size: 12px;
+	color: #d5e1f1;
+	padding-top: 15px;
+	position: relative;
+	top: -20px
+}
+.bannerbg ul {
+	float: right;
+	width: 70px;
+	cursor: pointer;
+}
+.bannerbg :hover {
+	color: #fff;
+}
+.bannerbg li {
+	float: none;
+	clear: both;
+}

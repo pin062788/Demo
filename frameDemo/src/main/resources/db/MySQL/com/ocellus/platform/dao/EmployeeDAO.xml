@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.EmployeeDAO">
+	
+	<resultMap type="Employee" id="EmployeeResult">
+		<id column="Employee_ID" property="employeeId" />
+		<result column="EMPLOYEE_BH" property="employeeBh"/>
+		<result column="EMPLOYEE_MC" property="employeeMc"/>
+		<result column="EMPLOYEE_ZZBM" property="employeeZzbm"/>
+		
+		<result column="EMPLOYEE_ZZBMMC" property="employeeZzbmMc"/>
+		<result column="EMPLOYEE_ZZBMID" property="employeeZzbmId"/>
+		
+		
+		<result column="EMPLOYEE_ZW" property="employeeZw"/>
+		<result column="EMPLOYEE_XB" property="employeeXb"/>
+		<result column="EMPLOYEE_SJH" property="employeeSjh"/>
+		<result column="EMPLOYEE_BZ" property="employeeBz"/>
+		<result column="ADD_USER" property="addUser"/>
+		<result column="ADD_DATE" property="addDate"/>
+		<result column="EDIT_USER" property="editUser"/>
+		<result column="EDIT_DATE" property="editDate"/>
+		<result column="ACTIVATE" property="activate"/>
+	</resultMap>
+	
+	<delete id="delete" parameterType="String">
+		UPDATE TB_Employee SET ACTIVATE = '0' WHERE TRIM(Employee_ID)= TRIM(#{id}) 
+	</delete>
+	
+	<select id="search" resultMap="EmployeeResult" parameterType="map">
+		SELECT e.* 
+		FROM TB_Employee e
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			e.activate = '1'
+			<if test="employeeId != null and employeeId != ''">
+				AND e.Employee_ID =#{employeeId}
+			</if>
+			<if test="employeeMc != null and employeeMc != ''">
+				AND e.EMPLOYEE_MC  like '%${employeeMc}%'
+			</if>
+		</trim>
+	</select>
+	
+	<insert id="insert" parameterType="Employee">
+	INSERT INTO TB_Employee (
+			Employee_ID,
+			EMPLOYEE_BH,
+			EMPLOYEE_MC,
+			EMPLOYEE_ZZBM,
+			EMPLOYEE_ZZBMMC,
+			EMPLOYEE_ZZBMID,
+			EMPLOYEE_ZW,
+			EMPLOYEE_XB,
+			EMPLOYEE_SJH,
+			EMPLOYEE_BZ,
+			ADD_USER,
+			ADD_DATE,
+			EDIT_USER,
+			EDIT_DATE,
+			activate
+		) VALUES (
+			#{employeeId,jdbcType=CHAR},
+			#{employeeBh,jdbcType=VARCHAR},
+			#{employeeMc,jdbcType=VARCHAR},
+			#{employeeZzbm,jdbcType=VARCHAR},
+			#{employeeZzbmMc,jdbcType=VARCHAR},
+			#{employeeZzbmId,jdbcType=VARCHAR},
+			#{employeeZw,jdbcType=TIMESTAMP},
+			#{employeeXb,jdbcType=VARCHAR},
+			#{employeeSjh,jdbcType=VARCHAR},
+			#{employeeBz,jdbcType=VARCHAR},
+			#{addUser,jdbcType=VARCHAR},
+			#{addDate,jdbcType=TIMESTAMP},
+			#{editUser,jdbcType=VARCHAR},
+			#{editDate,jdbcType=TIMESTAMP},
+			'1'
+		)
+	</insert>
+	
+	<update id="update" parameterType="Employee">
+		UPDATE TB_Employee SET
+			<if test="employeeBh != null">
+				EMPLOYEE_BH = #{employeeBh,jdbcType=VARCHAR},
+			</if>
+			<if test="employeeMc != null">
+				EMPLOYEE_MC = #{employeeMc,jdbcType=VARCHAR},
+			</if>
+			<if test="employeeZzbm != null">
+				EMPLOYEE_ZZBM = #{employeeZzbm,jdbcType=VARCHAR},
+			</if>
+			<if test="employeeZzbmMc != null">
+				EMPLOYEE_ZZBMMC = #{employeeZzbmMc,jdbcType=VARCHAR},
+			</if>
+			<if test="employeeZzbmId != null">
+				EMPLOYEE_ZZBMID = #{employeeZzbmId,jdbcType=VARCHAR},
+			</if>
+			<if test="employeeZw != null">
+				EMPLOYEE_ZW = #{employeeZw,jdbcType=TIMESTAMP},
+			</if>
+			<if test="employeeXb != null">
+				EMPLOYEE_XB = #{employeeXb,jdbcType=VARCHAR},
+			</if>
+			<if test="employeeSjh != null">
+				EMPLOYEE_SJH = #{employeeSjh,jdbcType=VARCHAR},
+			</if>
+			<if test="employeeBz != null">
+				EMPLOYEE_BZ = #{employeeBz,jdbcType=VARCHAR},
+			</if>
+			<if test="editUser != null">
+				EDIT_USER = #{editUser,jdbcType=VARCHAR},
+			</if>
+			<if test="editDate != null">
+				EDIT_DATE = #{editDate,jdbcType=TIMESTAMP},
+			</if>
+			Employee_ID=#{employeeId,jdbcType=CHAR}
+		WHERE TRIM(Employee_ID) = #{employeeId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"     
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.platform.dao.GroupUserMappingDAO">
+	
+	<resultMap id="GroupUserMappingResult" type="GroupUserMapping">
+		<id column="ID" property="id" />
+		<result column="GROUP_ID" property="groupId" />
+		<result column="USER_ID" property="userId"/>
+		<result column="CREATE_DATE" property="addDate"/>
+		<result column="CREATE_USER" property="addUser"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="GroupUserMapping">
+		INSERT INTO TB_GROUP_USER_MAPPING(
+			ID,
+            GROUP_ID,
+            USER_ID
+        ) values(
+         	#{id},
+            #{groupId, jdbcType=CHAR},
+            #{userId, jdbcType=CHAR}
+        )
+	</insert>
+	<delete id="deleteByGroupId">
+		delete from TB_GROUP_USER_MAPPING where group_id =  #{groupId, jdbcType=CHAR}
+	</delete>
+		<delete id="deleteByUserId">
+		delete from TB_GROUP_USER_MAPPING where user_id =  #{userId, jdbcType=CHAR}
+	</delete>
+</mapper>
