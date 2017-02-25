@@ -2,10 +2,10 @@
 <project version="4">
   <component name="dataSourceStorageLocal">
     <data-source name="MySQL - agilesurvey@10.112.4.155" uuid="a2c8a1e6-b812-45f4-a15e-3d0486398fe2">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" />
       <secret-storage>master_key</secret-storage>
       <user-name>song</user-name>
-      <schema-pattern>agilesurvey.*</schema-pattern>
-      <default-schemas>agilesurvey.*</default-schemas>
+      <resolve-scope>agilesurvey:*</resolve-scope>
     </data-source>
   </component>
 </project>
