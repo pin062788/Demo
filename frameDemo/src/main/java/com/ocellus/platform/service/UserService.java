@@ -7,6 +7,7 @@ import com.ocellus.platform.dao.UserGroupDAO;
 import com.ocellus.platform.model.*;
 import com.ocellus.platform.utils.Constants;
 import com.ocellus.platform.utils.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,10 +82,9 @@ public class UserService extends AbstractService<User, String> {
         }
     }
 
-    public User save(User user) {
-        if ("".equals(user.getUserId())) {
+    public User save(User user) throws Exception {
+        if (StringUtils.isEmpty(user.getUserId())) {
             insert(user);
-
         } else {
             update(user);
         }

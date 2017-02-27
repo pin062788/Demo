@@ -76,15 +76,12 @@
         }
 
         $(document).ready(function () {
-
             $("#resourceDialog").dialog({
+                title: "角色管理 ->权限设置",
                 autoOpen: false,
                 pisition: {my: "center", at: "center", of: window},
                 width: "40%",
-                height: 400,
-                modal: true,
-                resizable: true,
-                title: "角色管理 ->权限设置"
+                height: 400
             });
 
             $("#roleDialog").dialog({
@@ -225,17 +222,15 @@
             </shiro:hasPermission>
         </div>
     </div>
-    <div>
-        <div id="criterion">
-            <table cellspacing="5" cellpadding="5" border="0">
-                <tr>
-                    <td>角色编码：</td>
-                    <td><input type="text" id="roleCode"/></td>
-                    <td>角色名称：</td>
-                    <td><input type="text" id="roleName"/></td>
-                </tr>
-            </table>
-        </div>
+    <div id="criterion">
+        <table cellspacing="5" cellpadding="5" border="0">
+            <tr>
+                <td>角色编码：</td>
+                <td><input type="text" id="roleCode"/></td>
+                <td>角色名称：</td>
+                <td><input type="text" id="roleName"/></td>
+            </tr>
+        </table>
     </div>
     <table id="roleList"></table>
     <div id="rolePager"></div>

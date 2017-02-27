@@ -9,15 +9,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <jsp:include page="/common/common.jsp" />
     <script type="text/javascript">
-    var xbList = jQuery.parseJSON('${xbList}');   
-    $(document).ready(function(){
+    var xbList = jQuery.parseJSON('${xbList}');
+    $(function(){
         $("#rywhDialog").dialog({
             title:"人员维护",
             autoOpen: false,
             position: {my: "top", at: "top+50", of: window},
             modal:true,
             resizable: true,
-            width:"600",
+            width:"650",
             height:350
         });
         //查询
@@ -27,7 +27,7 @@
             var renYuanWeiHuMc = encodeURI($.trim($("#renYuanWeiHuMc").val()));
             $("#renYuanWeiHuGridList").jqGrid('setGridParam',{
                 postData:{
-                    'employeeMc': renYuanWeiHuMc
+                    'employeeMcLike': renYuanWeiHuMc
                 },
                 mytype: 'POST',
                 page:1
@@ -67,17 +67,29 @@
         //删除
         $("#renYuanWeiHu_DeleBtn").button({
                icons : {primary:"ui-icon-closethick"}
-           }).click(function(){
+        }).click(function(){
             var _url = "${ctx}/employee/deleteEmployee.do";
-                var params = {"_time_":new Date().getTime()};
-                deleteById("renYuanWeiHuGridList","employeeId",_url,params,function(data){
+            var params = {"_time_":new Date().getTime()};
+            var rowData = $('#renYuanWeiHuGridList').jqGrid('getGridParam','selarrrow');
+            if(rowData.length < 1) {
+                alert("请至少选择一条数据进行删除");
+                return;
+            }
+            var ids = [];
+            for (var i = 0; i < rowData.length; i++) {
+                ids.push($("#renYuanWeiHuGridList").jqGrid('getCell', rowData[i], "employeeId"));
+            }
+            params.ids = encodeURI(ids);
+            if (confirm("请确认是否要删除数据?")) {
+                $.post(_url,params,function(data){
                     var result = $.parseJSON(data);
-                        alert(result.message);
+                    alert(result.message);
                     if(result.status=="1"){
-                        reloadGridById("renYuanWeiHuGridList");
+                        $("#renYuanWeiHuGridList").jqGrid().trigger("reloadGrid");
                     }
                 });
-         });
+            }
+        });
 
         $("#renYuanWeiHuGridList").jqGrid({//查询记录
             url: "${ctx}/employee/getEmployeeList.do",
@@ -117,27 +129,27 @@
     </script>
 </head>
 <body id="loading">
-<div id="renYuanWeiHu_DIV" class="ui-widget">
-        <div id="renYuanWeiHu_toolBar" class="ui-widget-header ui-state-default">
-             <div>
-           	 	<button id="renYuanWeiHu_SearchBtn">查询</button>
-           	 	<button id="renYuanWeiHu_AddBtn">新增</button>
-           	 	<button id="renYuanWeiHu_EditBtn">修改</button>
-           	 	<button id="renYuanWeiHu_DeleBtn">删除</button>
-            </div> 
+<div class="ui-widget-content">
+    <div id="renYuanWeiHu_toolBar" class="ui-widget-header ui-state-default">
+         <div>
+            <button id="renYuanWeiHu_SearchBtn">查询</button>
+            <button id="renYuanWeiHu_AddBtn">新增</button>
+            <button id="renYuanWeiHu_EditBtn">修改</button>
+            <button id="renYuanWeiHu_DeleBtn">删除</button>
         </div>
-        <div id="renYuanWeiHu_criterion" >
-            <form id="renYuanWeiHuQueryForm">
-                <table cellspacing="5" cellpadding="5" >
-                    <tr>
-                        <td align="right"><label>人员名称：</label></td>
-                        <td>
-                        	<input type="text" id="renYuanWeiHuMc" name="renYuanWeiHuMc">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
+    </div>
+    <div id="renYuanWeiHu_criterion" >
+        <form id="renYuanWeiHuQueryForm">
+            <table cellspacing="5" cellpadding="5" >
+                <tr>
+                    <td align="right"><label>人员名称：</label></td>
+                    <td>
+                        <input type="text" id="renYuanWeiHuMc" name="renYuanWeiHuMc">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
     <table id="renYuanWeiHuGridList"></table>
     <div id="renYuanWeiHuGridPager"></div>
     <div id="rywhDialog"></div>

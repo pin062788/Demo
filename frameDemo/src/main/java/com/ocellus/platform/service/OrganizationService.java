@@ -22,7 +22,7 @@ public class OrganizationService extends AbstractService<Organization, String> {
     }
 
 
-    public Organization save(Organization org) {
+    public Organization save(Organization org) throws Exception {
         if (org != null) {
             if (StringUtil.isEmpty(org.getOrgId())) {
                 insert(org);

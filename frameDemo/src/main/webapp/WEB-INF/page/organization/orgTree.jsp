@@ -3,7 +3,6 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <jsp:include page="/common/common.jsp" />
     <script type="text/javascript">
         var currentParentNode;
         var setting = {
@@ -64,9 +63,7 @@
             treeObj.selectNode(node, false);
         }
         function returnCode(treeId, treeNode) {
-
-            if (treeNode.isParent) return;
-
+//            if (treeNode.isParent) return;
 
             $("#relatedName").val(treeNode.text);
             $("#relatedId").val(treeNode.id);
@@ -83,7 +80,7 @@
     </script>
 </head>
 <body>
-<div style="display: block;overflow:auto;width:200px; height:250px; ">
+<div style="display: block;overflow:auto;width:200px; max-height:250px; ">
     <ul id="treeMenu" class="ztree"></ul>
 </div>
 </body>

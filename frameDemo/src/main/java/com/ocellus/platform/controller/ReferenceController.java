@@ -10,7 +10,6 @@ import com.ocellus.platform.service.ReferenceService;
 import com.ocellus.platform.utils.Constants;
 import com.ocellus.platform.utils.StringUtil;
 import org.activiti.engine.impl.util.json.JSONArray;
-import org.activiti.engine.impl.util.json.JSONException;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -68,7 +66,7 @@ public class ReferenceController extends BaseController {
     }
 
     @RequestMapping("/showTree")
-    public String showTree(HttpServletRequest request, HttpServletResponse response) throws JSONException {
+    public String showTree(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<?, ?> param = getParamMap(request);
         String id = (String) param.get("id");
         PrintWriter writer = null;
@@ -113,8 +111,8 @@ public class ReferenceController extends BaseController {
         return null;
     }
 
-    @RequestMapping("/edit")
-    public ModelAndView edit(@RequestParam("id") String id) {
+    @RequestMapping("/editNode")
+    public ModelAndView editNode(@RequestParam("id") String id) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/reference/nodeDetail");
 
@@ -150,9 +148,9 @@ public class ReferenceController extends BaseController {
         return mv;
     }
 
-    @RequestMapping("/save")
+    @RequestMapping("/saveNode")
     @ResponseBody
-    public Map<String, Integer> saveNode(@ModelAttribute("reference") Reference reference, HttpServletRequest request) throws ParseException {
+    public Map<String, Integer> saveNode(@ModelAttribute("reference") Reference reference, HttpServletRequest request) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String a2 = sdf.format(new Date());
         Date date = sdf.parse(a2);
@@ -169,7 +167,7 @@ public class ReferenceController extends BaseController {
         return rtn;
     }
 
-    @RequestMapping("/delete")
+    @RequestMapping("/deleteNode")
     @ResponseBody
     public ResponseStatus deleteNode(@RequestParam("id") String id) {
         ResponseStatus responseStatus = new ResponseStatus();

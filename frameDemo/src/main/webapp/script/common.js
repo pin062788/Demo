@@ -151,8 +151,9 @@ function clockon() {
     if (hour < 10) hour = "0" + hour;
     if (minu < 10) minu = "0" + minu;
     if (sec < 10) sec = "0" + sec;
-    var arr_week = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-    week = arr_week[day];
+    var arr_week_en = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+    var arr_week_cn = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+    week = arr_week_cn[day];
     var time = "";
     time = year + "-" + month + "-" + date + " " + hour + ":" + minu + ":" + sec + " " + week;
 

@@ -1,6 +1,31 @@
 var mainMenuTreeObj = null; //左侧隐藏树形菜单对象
 var mainAccordionObj = null; //左侧手风琴对象
 var mainTabsObj = null; //主页Tab选项卡对象
+//Main Menus
+var mainMenuTreeSetting = {
+	data : {
+		key : {name :"resourceName", children:"children" }
+	},
+	simpleData: {enable: true, idKey: "resourceCode", pIdKey: "parentResourceCode", rootPId:null}
+};
+//初始化左侧手风琴下面的树形菜单
+var subTreeSetting = {
+	data : {
+		key : {name : "resourceName", children : "children"}
+	},
+	simpleData : {enable : true, idKey : "resourceCode", pIdKey : "parentResourceCode", rootPId : null},
+	view : {showLine : true,showIcon: true },
+	callback : {
+		beforeClick: function(treeId, treeNode){
+			return (treeNode && !treeNode.isParent);
+		},
+		onClick: function(event, treeId, treeNode) {
+			if(!checkIsNull(treeNode.resourceUrl)){
+				openTabByUrl(treeNode.resourceUrl);
+			}
+		}
+	}
+};
 $(document).ready(function () {
 	/***设置主页布局***/
 	$('#container').layout({
@@ -10,37 +35,17 @@ $(document).ready(function () {
 		south:{size: 30},
 		center:{onresize_end: resetMainAccordionGridSize}
 	});
-	/***设置主页左侧树形菜单开始***/
-	//Main Menus
-	var mainMenuTreeSetting = {
-		data : {
-			key : {name :"resourceName", children:"children" }
-		},
-		simpleData: {enable: true, idKey: "resourceCode", pIdKey: "parentResourceCode", rootPId:null}
-	};
+	/***设置主页左侧树形菜单***/
+	setMenu();
+	/***设置Tab***/
+	setHomeTab();
+});
+function setMenu(){
 	$.getJSON(ctx + "/main/getMenu.do?timer="+new Date().getTime(), function(data){
 		var menuData = data;//$.parseJSON(data);
 		$.fn.zTree.init($("#mainMenuTree"), mainMenuTreeSetting, menuData);
 		//初始化左侧手风琴
 		initMainAccordion();
-		//初始化左侧手风琴下面的树形菜单
-		var subTreeSetting = {
-			data : {
-				key : {name : "resourceName", children : "children"}
-			},
-			simpleData : {enable : true, idKey : "resourceCode", pIdKey : "parentResourceCode", rootPId : null},
-			view : {showLine : true,showIcon: true},
-			callback : {
-				beforeClick: function(treeId, treeNode){
-					return (treeNode && !treeNode.isParent);
-				},
-				onClick: function(event, treeId, treeNode) {
-					if(!checkIsNull(treeNode.resourceUrl)){
-						openTabByUrl(treeNode.resourceUrl);
-					}
-				}
-			}
-		};
 		$(".mainMenuTree_subTree").each(function(){
 			var resourceId = $(this).data("resourceid");
 			var treeNode = mainMenuTreeObj.getNodesByParam("resourceId", resourceId)[0];
@@ -48,25 +53,47 @@ $(document).ready(function () {
 			$.fn.zTree.init($(this), subTreeSetting, treeNode.children);
 		});
 	});
+}
 
-	//递归设置父节点菜单图标
-	function setICONForParentMenu(treeNode){
-		if(treeNode.isParent){
-			/*if(treeNode.resourceImg == null || treeNode.resourceImg ==""){
-				treeNode.icon = ctx + "/" +"images/213148246.gif";
-			}else{
-				treeNode.icon = ctx + "/" +treeNode.resourceImg;
-			}*/
-			for(var i =0; i<treeNode.children.length;i++){
-				var childrenNode = treeNode.children[i];
-				setICONForParentMenu(childrenNode);
-			}
+//递归设置父节点菜单图标
+function setICONForParentMenu(treeNode){
+	if(treeNode.isParent){
+		/*if(treeNode.resourceImg == null || treeNode.resourceImg ==""){
+		 treeNode.icon = ctx + "/" +"images/213148246.gif";
+		 }else{
+		 treeNode.icon = ctx + "/" +treeNode.resourceImg;
+		 }*/
+		for(var i =0; i<treeNode.children.length;i++){
+			var childrenNode = treeNode.children[i];
+			setICONForParentMenu(childrenNode);
 		}
 	}
-	/***设置主页左侧树形菜单结束***/
-
-	/***设置Tab***/
-		//初始化第一个Tab选项卡
+}
+/**
+ * 初始化左侧手风琴
+ */
+function initMainAccordion(){
+	//初始化左侧隐藏树菜单
+	mainMenuTreeObj = $.fn.zTree.getZTreeObj("mainMenuTree");
+	var treearr = mainMenuTreeObj.getNodes();
+	for (var i = 0; i < treearr.length; i++) {
+		if (treearr[i].isParent) {
+			var accordionItemText = treearr[i].resourceName.replace(/=/gm, "");
+			/*var headerItemHtml = "<h3 style=\"white-space: nowrap; font-size:15px;align:center\" ><img src='" + ctx + treearr[i].resourceImg + "' " + "style='margin-bottom:-4px;margin-left:-5px'>&nbsp;&nbsp;&nbsp;" + accordionItemText + "</h3>" +
+					"<div style='overflow: auto;'>" +
+					"<ul id='" + treearr[i].resourceId + "_subtree' data-accordionindex='" + i + "' data-resourceid='" + treearr[i].resourceId + "' class='mainMenuTree_subTree ztree'></ul>" +
+					"</div>";*/
+			var headerItemHtml = "<h3 style=\"white-space: nowrap; font-size:15px;align:center\" >&nbsp;&nbsp;" + accordionItemText + "</h3>" +
+					"<div style='overflow: auto;'>" +
+					"<ul id='" + treearr[i].resourceId + "_subtree' data-accordionindex='" + i + "' data-resourceid='" + treearr[i].resourceId + "' class='mainMenuTree_subTree ztree'></ul>" +
+					"</div>";
+			$("#mainAccordion").append(headerItemHtml);
+		}
+	}
+	mainAccordionObj = $("#mainAccordion").accordion({heightStyle : "fill", active: 0});
+}
+function setHomeTab(){
+	//初始化第一个Tab选项卡
 	$.get(ctx + "/main/mainPage.do", function(result){
 		var rawId = new Date().getTime();
 		$("#mainTabs #mainTabsUl").append("<li data-resourceurl='/main/mainPage.do'><a href='#mainTabsItem_" + rawId + "'>主页</a></li>");
@@ -103,31 +130,7 @@ $(document).ready(function () {
 			}
 		});
 	});
-});
-/**
- * 初始化左侧手风琴
- */
-function initMainAccordion(){
-	//初始化左侧隐藏树菜单
-	mainMenuTreeObj = $.fn.zTree.getZTreeObj("mainMenuTree");
-	var treearr = mainMenuTreeObj.getNodes();
-	for (var i = 0; i < treearr.length; i++) {
-		if (treearr[i].isParent) {
-			var accordionItemText = treearr[i].resourceName.replace(/=/gm, "");
-			/*var headerItemHtml = "<h3 style=\"white-space: nowrap; font-size:15px;align:center\" ><img src='" + ctx + treearr[i].resourceImg + "' " + "style='margin-bottom:-4px;margin-left:-5px'>&nbsp;&nbsp;&nbsp;" + accordionItemText + "</h3>" +
-					"<div style='overflow: auto;'>" +
-					"<ul id='" + treearr[i].resourceId + "_subtree' data-accordionindex='" + i + "' data-resourceid='" + treearr[i].resourceId + "' class='mainMenuTree_subTree ztree'></ul>" +
-					"</div>";*/
-			var headerItemHtml = "<h3 style=\"white-space: nowrap; font-size:15px;align:center\" >&nbsp;&nbsp;" + accordionItemText + "</h3>" +
-					"<div style='overflow: auto;'>" +
-					"<ul id='" + treearr[i].resourceId + "_subtree' data-accordionindex='" + i + "' data-resourceid='" + treearr[i].resourceId + "' class='mainMenuTree_subTree ztree'></ul>" +
-					"</div>";
-			$("#mainAccordion").append(headerItemHtml);
-		}
-	}
-	mainAccordionObj = $("#mainAccordion").accordion({heightStyle : "fill", active: 0});
 }
-
 /**
  * 根据传入的url打开Tab
  */

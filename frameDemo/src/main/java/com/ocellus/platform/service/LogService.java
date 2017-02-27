@@ -29,8 +29,11 @@ public class LogService extends AbstractService<UserLog, String> {
     }
 
     public void insertUserLog(UserLog userLog) {
-
-        super.insert(userLog);
+        try {
+            super.insert(userLog);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public List<UserLog> searchInterfaceLog(Map params) {

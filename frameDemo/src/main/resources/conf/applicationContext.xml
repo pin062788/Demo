@@ -15,7 +15,7 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd ">
 
   	<import resource="propertyFileConfigurer.xml"/>
-	
+
     <bean id="${db-pool-ds}" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="${dataSource.driverClass}"/>
 		<property name="jdbcUrl" value="${dataSource.jdbcUrl}"/>

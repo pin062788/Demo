@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>调查问卷系统</title>
+    <title>警务系统</title>
     <script type="text/javascript">
         window.location = "${ctx}/main/index.do";
     </script>

@@ -71,7 +71,7 @@ public class RoleService extends AbstractService<Role, String> {
         return roleDAO.getByCode(roleCode);
     }
 
-    public Role save(Role vo) {
+    public Role save(Role vo) throws Exception {
         Role po = null;
         boolean insert = false;
         if (StringUtil.isEmpty(vo.getRoleId())) {
@@ -163,7 +163,11 @@ public class RoleService extends AbstractService<Role, String> {
         Collection<Restrict> restricts = restrictMap.values();
 
         for (Restrict r : restricts) {
-            restrictService.insert(r);
+            try {
+                restrictService.insert(r);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -184,4 +188,13 @@ public class RoleService extends AbstractService<Role, String> {
         roleDAO.batchDelete(roleIdArray);
     }
 
+    public boolean hasAdminRole(String roleIds){
+        String[] roleIdArray = roleIds.split(",");
+        List<Role> roles = search(ParamUtil.setParam("roleIds",roleIdArray));
+        if(roles !=null && !roles.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

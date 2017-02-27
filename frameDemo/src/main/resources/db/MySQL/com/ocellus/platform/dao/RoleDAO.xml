@@ -69,6 +69,12 @@
 			<if test="roleCode != null and roleCode !=''">
 				AND role_code like '%${roleCode}%'
 			</if>
+			<if test="roleIds != null and roleIds !=''">
+				trim(role_id) in
+				<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+					#{roleId}
+				</foreach>
+			</if>
 		</where>
 	</select>
 	<select id="getUserRoles"  parameterType="string" resultMap="RoleResult">

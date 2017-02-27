@@ -27,10 +27,9 @@ public class RestrictTableService extends AbstractService<RestrictTable, String>
         return restrictTableDAO.selectAllUserTable();
     }
 
-    public RestrictTable save(RestrictTable restrictTable) {
+    public RestrictTable save(RestrictTable restrictTable) throws Exception {
         if ("".equals(restrictTable.getTableId())) {
             insert(restrictTable);
-
         } else {
             update(restrictTable);
         }

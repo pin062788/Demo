@@ -125,7 +125,7 @@
     </script>
 </head>
 <body id="loading">
-<div id="query" class="ui-widget">
+<div id="query" class="ui-widget-content">
     <div id="toolbar" class="ui-widget-header ui-state-default">
         <div>
             <shiro:hasPermission name="usergroup:view">

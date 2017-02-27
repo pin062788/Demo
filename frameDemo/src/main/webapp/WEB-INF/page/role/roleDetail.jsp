@@ -61,13 +61,12 @@
             <tr>
                 <td>角色编码：</td>
                 <td>
-                    <c:if test="${empty role.roleId}">
-                        <form:input path="roleCode" id="roleCode" maxlength="16"/>
-                        <font color="red">*</font>
-                    </c:if> <c:if test="${not empty role.roleId}">
-                    <input type="text" disabled="disabled"
-                           value="${role.roleCode}">
-                    <form:hidden id="roleCode" path="roleCode"/>
+                <c:if test="${role.roleId == '' or role.roleId == null }">
+                    <form:input path="roleCode" maxlength="16"/>
+                    <font color="red">*</font>
+                </c:if>
+                <c:if test="${role.roleId  != '' and role.roleId != null }">
+                    <form:input path="roleCode" disabled="true"/>
                     <font color="red">*</font>
                 </c:if>
                 </td>

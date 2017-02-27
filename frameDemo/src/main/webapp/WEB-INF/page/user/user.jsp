@@ -8,6 +8,16 @@
     <jsp:include page="/common/common.jsp" />
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#detailDialog").dialog({
+                title:"用户管理",
+                autoOpen: false,
+                position: {my: "top", at: "top+10", of: window},
+                modal:true,
+                resizable: true,
+                width:"800",
+                height:550
+            });
+
             $("#findUserBtn").button({
                 icons: {primary: "ui-icon-search"}
             }).click(function () {
@@ -114,15 +124,6 @@
                 search: false
             });
 
-            $("#detailDialog").dialog({
-                title:"用户管理",
-                autoOpen: false,
-                position: {my: "top", at: "top+50", of: window},
-                modal:true,
-                resizable: true,
-                width:"800",
-                height:400
-            });
         });
         function afterSave() {
             $("#detailDialog").dialog("close");
@@ -131,7 +132,7 @@
     </script>
 </head>
 <body id="loading">
-<div id="query" class="ui-widget">
+<div id="query" class="ui-widget-content">
     <div id="toolbar" class="ui-widget-header ui-state-default">
         <div>
             <shiro:hasPermission name="user:view">

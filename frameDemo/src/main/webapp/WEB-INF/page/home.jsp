@@ -13,19 +13,20 @@
         $(function(){
             clockon();
         });
-        
     </script>
 </head>
 <body style="height:100%;">
 <div id="loading" style="height:100%;">
     <div id="container" class="container">
         <div class="pane ui-layout-north">
-            <div class="bannerbg">
+            <div class="bannerbg" >
                 <div style="position:relative;top:15px;left:25px;text-align: left;">
-                    <img alt="" src="${ctx}/css/images/banner_logo.gif">
+                    <img alt="" src="${ctx}/images/banner_logo.jpg" height="32" width="32">
                 </div>
-                <div style="position:relative;top:5px;right:125px;float:right;text-align: left; color: #000000; font-size: 16px;">
-                	<span>${loginUserName} <a href="${ctx}/main/logout.do" target="_parent" onclick="return self.confirm('Are you sure to Logout?')">Logout</a></span>
+                <div style="position:relative;top:5px;right:125px;float:right;text-align: left; color: #000000;
+                    font-size: 12px;">
+                	<span >${loginUserName} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span><a href="${ctx}/main/logout.do" target="_parent" onclick="return self.confirm('确定要注销登录吗?')">注销</a></span>
                 </div>
                 <div style="position:relative;top:5px;right:200px;float:right;text-align: left; color:black;">
                     <span id="bgclock"></span>

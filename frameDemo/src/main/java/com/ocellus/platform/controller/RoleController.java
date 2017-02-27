@@ -97,11 +97,15 @@ public class RoleController extends BaseController {
     public AjaxView delete(HttpServletRequest request, @PathVariable("roleIds") String roleIds) {
         AjaxView rtn = new AjaxView();
         try {
-            roleService.batchDelete(roleIds);
-            rtn.put("status", 1);
+            boolean hasAdminRole = roleService.hasAdminRole(roleIds);
+            if(hasAdminRole){
+                rtn.setFailed().setMessage("选择数据中包含管理员权限，最高权限不可删除!");
+            }else{
+                roleService.batchDelete(roleIds);
+                rtn.setSuccess();
+            }
         } catch (Exception e) {
-            String message = "删除失败";
-            logger.error(message, e);
+            logger.error("删除失败", e);
             rtn.setFailed().setMessage(e.getMessage());
         }
         return rtn;

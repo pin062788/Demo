@@ -17,7 +17,7 @@ public class AbstractService<T extends AbstractModel, PK extends Serializable> {
         this.dao = dao;
     }
 
-    public int insert(T model) {
+    public void insert(T model)throws Exception {
         model.setDBId(StringUtil.getGUID());
         Date now = new Date();
         String userLogin = WebUtil.getLoginUserName();
@@ -25,9 +25,13 @@ public class AbstractService<T extends AbstractModel, PK extends Serializable> {
         model.setAddUser(userLogin);
         model.setEditDate(now);
         model.setEditUser(userLogin);
-        return dao.insert(model);
+        if(beforeInsert(model)){
+            dao.insert(model);
+            afterInsert(model);
+        }
     }
-    public void afterInsert(T model){}
+    public boolean beforeInsert(T vo) throws Exception {return true;}
+    public void afterInsert(T model) throws Exception {}
 
     public void delete(PK id) {
         dao.delete(id);
@@ -53,16 +57,22 @@ public class AbstractService<T extends AbstractModel, PK extends Serializable> {
         return dao.getById(id);
     }
 
-    public T save(T vo) {
-        beforeSave(vo);
-        if (!StringUtil.isEmpty(vo.getDBId())) {
-            update(vo);
-        } else {
-            insert(vo);
+    public T save(T vo) throws Exception {
+        boolean canNext = beforeSave(vo);
+        if(canNext){
+            if (!"0".equals(vo.getDBId())&&!StringUtil.isEmpty(vo.getDBId())) {//mysql 主键 int 初始化就是0
+                update(vo);
+            } else {
+                insert(vo);
+            }
+            afterSave(vo);
         }
-        afterSave(vo);
         return vo;
     }
-    public void afterSave(T vo) {}
-    public void beforeSave(T vo) {}
+    public boolean beforeSave(T vo) throws Exception {return true;}
+    public void afterSave(T vo) throws Exception {}
+
+    public List<T> selectAll() {
+        return dao.search(null);
+    }
 }

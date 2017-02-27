@@ -14,7 +14,7 @@
             $(".login_info_select").click(function (index) {
                 $(".login_info_select").removeClass("login_info_select_active");
                 $(this).toggleClass("login_info_select_active");
-                $("#sys_full_name").html("调查问卷系统" + $(this).attr("property"));
+                $("#sys_full_name").html("警务系统" + $(this).attr("property"));
             });
 
             if (document.getElementById("content_div")) {
@@ -67,7 +67,7 @@
             <table class="login_left_table1">
                 <tr class="login_left_tr">
                     <td class="login_info_select login_info_select_active" property="">
-                        <img alt="" src="${pageContext.request.contextPath}/images/default.png">
+                        <img alt="" src="${pageContext.request.contextPath}/images/login/login_default.png">
                     </td>
                     <td class="login_info_area">
                         <p style="vertical-align: top;" class="login_info">
@@ -101,7 +101,7 @@
         </form>
     </div>
     <div class="login_right">
-        <img alt="" src="${pageContext.request.contextPath}/images/right.png">
+        <img alt="" src="${pageContext.request.contextPath}/images/login/login_right.png">
     </div>
 </div>
 </body>

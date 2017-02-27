@@ -7,7 +7,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Insert title here</title>
-    <jsp:include page="../common/common.js.jsp"></jsp:include>
     <script type="text/javascript">
         $(document).ready(function () {
             //需要验证的字验证的提示消息

@@ -47,6 +47,9 @@
                     },
                     onRightClick: function (e, treeId, treeNode) {
                         if (treeNode) {
+                            if(treeNode.resourceCode == "0"){
+                                return false;
+                            }
                             var nodes = resourceTree.getSelectedNodes();
                             if (nodes && nodes.length > 0) {
                                 for (var i = 0, j = nodes.length; i < j; i++) {
@@ -60,6 +63,9 @@
                         }
                     },
                     onDblClick: function (e, treeId, treeNode) {
+                        if(treeNode.resourceCode == "0"){
+                            return false;
+                        }
                         if (treeNode.resourceId) {
                             $("#resource_form_div").load("${ctx}/resource/edit.do?resourceId=" + treeNode.resourceId);
                         }

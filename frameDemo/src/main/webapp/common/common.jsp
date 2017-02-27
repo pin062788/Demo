@@ -3,8 +3,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-
-<link rel="stylesheet" class="ui-theme" type="text/css" href="${ctx}/css/jqueryui/start/jquery-ui.min.css"/>
+<%
+    Object theme = session.getAttribute("theme");
+    if(theme == null || "".equals(theme)){
+        theme = "start";
+        session.setAttribute("theme",theme);
+    }
+%>
+<link rel="stylesheet" class="ui-theme" type="text/css" href="${ctx}/css/jqueryui/${theme}/jquery-ui.css"/>
 <link rel="stylesheet" type="text/css" href="${ctx}/css/layout-default-latest.css"/>
 <link rel="stylesheet" type="text/css" href="${ctx}/css/zTreeStyle/zTreeStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${ctx}/css/ui.jqgrid.css"/>
@@ -15,7 +21,6 @@
 <link rel="stylesheet" type="text/css" href="${ctx}/css/common.css"/>
 
 <script type="text/javascript" src="${ctx}/script/jquery-1.11.1.js"></script>
-<%--<script type="text/javascript" src="${ctx}/script/jquery-migrate-1.1.0.js"></script>--%>
 <script type="text/javascript" src="${ctx}/script/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${ctx}/script/jquery.layout-latest.js"></script>
 <script type="text/javascript" src="${ctx}/script/grid.locale-cn.js"></script>
@@ -26,4 +31,5 @@
 <script type="text/javascript" src="${ctx}/script/jquery.contextmenu.r2.js"></script>
 <script type="text/javascript" src="${ctx}/script/linq.min.js"></script>
 <script type="text/javascript" src="${ctx}/script/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="${ctx}/script/validate.expand.js"></script>
 <script type="text/javascript" src="${ctx}/script/common.js"></script>

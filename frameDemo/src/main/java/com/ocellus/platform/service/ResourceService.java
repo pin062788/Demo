@@ -51,7 +51,7 @@ public class ResourceService extends AbstractService<Resource, String> {
         return resourceDao.getByCode(code);
     }
 
-    public Resource save(Resource vo) {
+    public Resource save(Resource vo) throws Exception {
         Resource po = null;
         if (vo != null) {
             boolean isInsert = false;

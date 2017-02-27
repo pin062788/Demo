@@ -12,9 +12,9 @@ public interface BaseDAO<T extends AbstractModel, PK extends Serializable> {
 
     void delete(PK id);
 
-    void deleteByIds(List<PK> idList);
-
     void update(T model);
+
+    void deleteByIds(List<PK> idList);
 
     T getById(PK id);
 

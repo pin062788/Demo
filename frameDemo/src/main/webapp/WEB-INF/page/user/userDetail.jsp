@@ -6,85 +6,118 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Insert title here</title>
-    <script type="text/javascript">
-        $(function () {
-            initLeftRight("availableRoles", "selectedRoles", "disSelectRoleBtn", "selectRoleBtn", "disSelectAllRoleBtn", "selectAllRoleBtn");
-            initLeftRight("availableUserGroups", "selectedUserGroups", "disSelectUserGroupBtn", "selectUserGroupBtn", "disSelectAllUserGroupBtn", "selectAllUserGroupBtn");
-            //需要验证的字验证的提示消息
-            var messages = {
-                userName: {required: "用户名不能为空"},
-                password: {required: "密码不能为空"},
-                relatedId: {required: "密码不能为空"}
-                /* 	,relatedType:{
-                 required:"类型不能为空"
-                 },
-                 userRelatedName:{required:"名称不能为空"} */
-            };
-            //需要验证的字段名称和验证规则
-            var rules = {
-                userName: {required: true},
-                password: {required: true},
-                relatedId: {required: true}
-                /*  ,relatedType:{
-                 required:true
-                 },*/
-                //userRelatedName:{required:true}
-            };
-            //封装成MAP类型的对象
-            var validateMap = {
-                "formId": "userDetail",
-                "submitMethod": saveUser,
-                "showErrorId": "errorMsg",
-                "rules": rules,
-                "messages": messages
-            };
-            //开启验证规则
-            validateForm(validateMap);
-            $("#userDetail").submit(function (event) {
-                event.preventDefault();
-            });
-
-            $("#saveUserBtn").button({
-                icons: {primary: "ui-icon-disk"}
-            });
-
-            $("#resetUserBtn").button({
-                icons: {primary: "ui-icon-arrowreturnthick-1-w"}
-            });
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+    $(function () {
+        initLeftRight("availableRoles", "selectedRoles", "disSelectRoleBtn", "selectRoleBtn", "disSelectAllRoleBtn", "selectAllRoleBtn");
+        initLeftRight("availableUserGroups", "selectedUserGroups", "disSelectUserGroupBtn", "selectUserGroupBtn", "disSelectAllUserGroupBtn", "selectAllUserGroupBtn");
+        //需要验证的字验证的提示消息
+        var messages = {
+            userName: {required: "用户名不能为空"},
+            password: {required: "密码不能为空"},
+            relatedId: {required: "密码不能为空"}
+                ,relatedType:{
+             required:"类型不能为空"
+             }/*,
+             userRelatedName:{required:"名称不能为空"} */
+        };
+        //需要验证的字段名称和验证规则
+        var rules = {
+            userName: {required: true},
+            password: {required: true},
+            relatedId: {required: true}
+              ,relatedType:{
+             required:true
+             }
+            //,userRelatedName:{required:true}
+        };
+        //封装成MAP类型的对象
+        var validateMap = {
+            "formId": "userDetail",
+            "submitMethod": saveUser,
+            "showErrorId": "errorMsg",
+            "rules": rules,
+            "messages": messages
+        };
+        //开启验证规则
+        validateForm(validateMap);
+        $("#userDetail").submit(function (event) {
+            event.preventDefault();
         });
 
-        function saveUser() {
-            var index = 0;
-            $.each(
-                $('#selectedRoles option'), function () {
+        $("#saveUserBtn").button({
+            icons: {primary: "ui-icon-disk"}
+        });
+
+        $("#resetUserBtn").button({
+            icons: {primary: "ui-icon-arrowreturnthick-1-w"}
+        });
+
+        $("#userRelatedDialog").dialog({
+            title:"类型 ->选择",
+            autoOpen: false,
+            position: {my: "top", at: "top+10", of: window},
+            modal:true,
+            resizable: true,
+            width:"800",
+            height:500
+        });
+        if("${userDetail.relatedType}" == '1'){
+            initOrgWidget("relatedName","orgDialog");
+        }
+    });
+
+    function saveUser() {
+        var index = 0;
+        $.each(
+            $('#selectedRoles option'), function () {
+                var input = $('<input>');
+                input.attr("name", "roles[" + index + "].roleId");
+                input.attr("type", "hidden");
+                input.attr("value", $(this).val());
+                $('#selectedRoles').append(input);
+                index++;
+            }
+        );
+        index = 0;
+        $.each(
+                $('#selectedUserGroups option'), function () {
                     var input = $('<input>');
-                    input.attr("name", "roles[" + index + "].roleId");
+                    input.attr("name", "groups[" + index + "].groupId");
                     input.attr("type", "hidden");
                     input.attr("value", $(this).val());
-                    $('#selectedRoles').append(input);
+                    $('#selectedUserGroups').append(input);
                     index++;
                 }
-            );
-            index = 0;
-            $.each(
-                    $('#selectedUserGroups option'), function () {
-                        var input = $('<input>');
-                        input.attr("name", "groups[" + index + "].groupId");
-                        input.attr("type", "hidden");
-                        input.attr("value", $(this).val());
-                        $('#selectedUserGroups').append(input);
-                        index++;
-                    }
-            );
-            save("#userDetail", null, function (data) {
-                closeAndReload("detailDialog", "userManagement");
-            });
+        );
+        save("#userDetail", null, function (data) {
+            closeAndReload("detailDialog", "userManagement");
+        });
+    }
+    /* function changeRelatedType(){
+        $('#relatedName').val("");
+        var val = $("#relatedType :selected").val();
+        if(val =='1'){
+            initOrgWidget("relatedName","orgDialog");
+            $("#userRelatedNameLab").text("组织机构:");
+            $("#relatedName").attr("readonly",true);
+        }else{
+            $("#userRelatedNameLab").text("名称:");
+            $("#relatedName").unbind("click");
+            $("#relatedName").removeAttr("readonly");
         }
 
-    </script>
+      	var _url = "${pageContext.request.contextPath}/user/showUserRelated.do?relatedType="+val;
+        if(val && val.length>0){
+            $.post(_url,"",function(data){
+                $("#userRelatedDialog").dialog("open").html(data);
+            }).fail(function(){
+                alert("加载失败!");
+            });
+        }
+    }*/
+</script>
 </head>
 <body>
 <div id="customerDetailDiv">
@@ -125,31 +158,25 @@
                             <tr>
                                 <td align="right">类型:</td>
                                 <td>
-                                    <form:select path="relatedType" id="relatedType">
+                                    <form:select path="relatedType" id="relatedType" ><%--onchange="changeRelatedType()"--%>
                                         <form:option value="employee">内部账户</form:option>
-                                        <%-- <form:options items="${relatedTypes }" itemValue="code" itemLabel="codeDesc"/> --%>
+                                        <%--<form:options items="${relatedTypes }" itemValue="code" itemLabel="codeDesc"/>--%>
                                     </form:select>
                                     <font color="red">*</font>
                                 </td>
                                 <td align="right">
                                     <label id="userRelatedNameLab">
-                                            <%--  <c:if test="${userDetail.relatedType == 'employee'}">
-                                                 组织机构：
-                                             </c:if>
-
-                                             <c:if test="${userDetail.relatedType != 'employee'}">
-                                                 名称:
-                                             </c:if> --%>
-                                        名称:
+                                       <%--<c:if test="${userDetail.relatedType == 'employee'}">
+                                             组织机构：
+                                       </c:if>
+                                       <c:if test="${userDetail.relatedType != 'employee'}">--%>
+                                             名称:
+                                       <%--</c:if>--%>
                                     </label>
                                 </td>
                                 <td>
-                                    <form:select path="relatedId" id="relatedId">
-                                        <form:option value="">=请选择=</form:option>
-                                        <form:options items="${employeeList }" itemValue="employeeId"
-                                                      itemLabel="employeeMc"/>
-                                    </form:select><span style="color:red;">*</span>
-                                        <%--  <form:input path="relatedName" id="relatedName" /> --%>
+                                    <form:input path="relatedName" id="relatedName" /><%-- readonly="true" --%>
+                                    <form:hidden path="relatedId" id="relatedId"/>
                                 </td>
                             </tr>
                         </table>
@@ -169,7 +196,7 @@
                     </fieldset>
                 </td>
                 <td align="center">
-                    <div id="btns">
+                    <div id="rolebtns">
                         <button id="selectAllRoleBtn">全选</button>
                         <br>
                         <button id="selectRoleBtn">选择</button>
@@ -204,7 +231,7 @@
                     </fieldset>
                 </td>
                 <td align="center">
-                    <div id="btns">
+                    <div id="grouprolebtns">
                         <button id="selectAllUserGroupBtn">全选</button>
                         <br>
                         <button id="selectUserGroupBtn">选择</button>
@@ -230,9 +257,9 @@
         </table>
     </form:form>
 </div>
-<%-- <div id="userRelatedDialog"></div>
+<div id="userRelatedDialog"></div>
 <div id="orgDialog" style="display: none;">
     <jsp:include page="../organization/orgTree.jsp" ></jsp:include>
-</div> --%>
+</div>
 </body>
 </html>

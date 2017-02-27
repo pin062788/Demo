@@ -6,7 +6,10 @@ import com.ocellus.platform.model.Reference;
 import com.ocellus.platform.service.EmployeeService;
 import com.ocellus.platform.service.ReferenceCacheService;
 import com.ocellus.platform.utils.DateUtil;
+import com.ocellus.platform.utils.ParamUtil;
 import com.ocellus.platform.web.view.AjaxView;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,6 +43,7 @@ public class EmployeeController extends BaseController {
      * @return
      */
     @RequestMapping("employeeIndexPage")
+    @RequiresPermissions("rywh:view")
     public ModelAndView EmployeeIndexPage() {
         ModelAndView mv = new ModelAndView("employee/employeeMain");
         List<Reference> xb = reference.getSubNodesList("YH_XB");//收支类型
@@ -104,7 +108,13 @@ public class EmployeeController extends BaseController {
     public AjaxView saveOrUpdate(HttpServletRequest request, @ModelAttribute Employee employee) {
         AjaxView rtn = new AjaxView();
         try {
-
+            if(StringUtils.isEmpty(employee.getEmployeeId())){
+                List empList = employeeService.search(ParamUtil.setParam("employeeBh",employee.getEmployeeBh()));
+                if(empList != null && !empList.isEmpty()){
+                    rtn.setFailed().setMessage("保存失败,编号"+employee.getEmployeeBh()+"已经存在");
+                    return rtn;
+                }
+            }
             employeeService.save(employee);
             rtn.setSuccess();
         } catch (Exception e) {

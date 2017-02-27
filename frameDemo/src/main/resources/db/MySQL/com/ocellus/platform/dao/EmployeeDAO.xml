@@ -36,8 +36,11 @@
 			<if test="employeeId != null and employeeId != ''">
 				AND e.Employee_ID =#{employeeId}
 			</if>
-			<if test="employeeMc != null and employeeMc != ''">
-				AND e.EMPLOYEE_MC  like '%${employeeMc}%'
+			<if test="employeeBh != null and employeeBh != ''">
+				AND e.Employee_Bh = #{employeeBh}
+			</if>
+			<if test="employeeMcLike != null and employeeMcLike != ''">
+				AND e.EMPLOYEE_MC like '%${employeeMcLike}%'
 			</if>
 		</trim>
 	</select>

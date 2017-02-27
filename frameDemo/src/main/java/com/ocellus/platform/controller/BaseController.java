@@ -1,33 +1,138 @@
 package com.ocellus.platform.controller;
 
-import com.ocellus.platform.dao.UserDAO;
+import com.ocellus.platform.model.AbstractModel;
 import com.ocellus.platform.model.PageRequest;
 import com.ocellus.platform.model.PageResponse;
 import com.ocellus.platform.model.User;
+import com.ocellus.platform.service.AbstractService;
 import com.ocellus.platform.utils.Constants;
 import com.ocellus.platform.utils.NumberUtil;
+import com.ocellus.platform.utils.PageConstants;
 import com.ocellus.platform.utils.StringUtil;
+import com.ocellus.platform.web.view.AjaxView;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class BaseController {
+public class BaseController <T extends AbstractModel, PK extends Serializable>{
     protected static Logger logger = Logger.getLogger(BaseController.class);
+    private AbstractService<T, PK> baseService;
+    public void setBaseService(AbstractService<T, PK> baseService) {
+        this.baseService = baseService;
+    }
 
-    @Autowired
-    private UserDAO userDao;
+    private String modelName;
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+    public String getModelName() {
+        return this.modelName;
+    }
+
+    @RequestMapping("/index")
+    public ModelAndView showIndex(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView(getModelName()+"/"+getModelName()+ PageConstants.SUFFIX_MAIN_PAGE);
+        mv.addObject("modelName",getModelName());
+        Map<String, String> requestMap = getParamMap(request);
+        mv.addAllObjects(requestMap);
+        indexModelObject(mv);
+        return mv;
+    }
+    public void indexModelObject(ModelAndView mv){
+    }
+
+    @ResponseBody
+    @RequestMapping("/getBaseList")
+    public PageResponse getBaseList(HttpServletRequest request) {
+        Map<String, String> param = getParamMapWithPage(request);
+        return getPageResponse(baseService.search(param));
+    }
+
+    @RequestMapping("/editBase")
+    public ModelAndView editBase(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView(getModelName()+"/"+getModelName()+ PageConstants.SUFFIX_EDIT_PAGE);
+        mv.addObject("modelName",getModelName());
+        Map<String, String> param = getParamMap(request);
+        String id = param.get("id");
+        T model = null;
+        if(!StringUtil.isEmpty(id)){
+            model = baseService.getById((PK) id);
+        }
+        mv.addAllObjects(param);
+        editModelObject(mv,model,param);
+        mv.addObject("model",model);
+        return mv;
+    }
+    public void editModelObject(ModelAndView mv,T model,Map<String, String> requestParam){
+    }
+
+    @ResponseBody
+    @RequestMapping("/saveBase")
+    public AjaxView saveBase(@RequestBody T vo){
+        AjaxView rtn = new AjaxView();
+        try {
+            boolean canSave = beforeSave(vo,rtn);
+            if(canSave){
+                baseService.save(vo);
+                afterSave(vo,rtn);
+                rtn.setSuccess().setMessage(PageConstants.SAVE_SUCCESSED);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            rtn.setFailed().setMessage(PageConstants.SAVE_EXCEPTION+"\n" + e.getMessage());
+        }
+        return rtn;
+    }
+    public boolean beforeSave(T vo,AjaxView rtn){
+        return true;
+    }
+    public void afterSave(T vo,AjaxView rtn){
+        rtn.setData(vo);
+    }
+
+    @RequestMapping("/deleteBase")
+    @ResponseBody
+    public AjaxView deleteBase(HttpServletRequest request) {
+        AjaxView ajaxView = new AjaxView();
+        try {
+            Map<String, String> map = getParamMap(request);
+            String ids = map.get("ids");
+            List<String> idList = StringUtil.toList(ids, Constants.COMA_STR);
+            if (idList!=null && !idList.isEmpty()) {
+                boolean canDelete = beforeDelete(idList, ajaxView);
+                if(canDelete){
+                    baseService.deleteByIds((List<PK>) idList);
+                    afterDelete(idList);
+                    ajaxView.setSuccess().setMessage(PageConstants.DELETE_SUCCESSED);
+                }
+            }else{
+                ajaxView.setMessage(PageConstants.DELETE_FAILED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ajaxView.setMessage(PageConstants.DELETE_EXCEPTION+"\n" + e.getMessage());
+        }
+        return ajaxView;
+    }
+    public boolean beforeDelete(List<String> idList,AjaxView rtn){
+        return true;
+    }
+    public void afterDelete(List<String> idList){
+    }
 
     protected Map<String, String> getParamMap(HttpServletRequest request) {
         Map<String, String> paramMap = new HashMap<String, String>();

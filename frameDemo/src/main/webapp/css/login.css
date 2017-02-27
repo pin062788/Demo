@@ -17,12 +17,12 @@ img{
     max-width:100%;height:auto;
 }
 
-.login_bg { background:url(../images/login_bg.jpg) repeat-x; height:100%; }
+.login_bg { background:url(../images/login/login_bg.jpg) repeat-x; height:100%; }
 .login_top {height:250px;margin:0 auto;width:1120px;}
 .login_main {margin:0 auto;width:1120px;}
 .login_logo {
     position:absolute;width:100%;height:80px;top:100px;overflow:hidden;
-    background:url(../images/login_logo.png) no-repeat;
+    background:url(../images/login/login_logo.png) no-repeat;
     /*font-size: 60px;
     font-weight: bolder;
     font-style: italic ;
@@ -46,7 +46,7 @@ img{
     margin-left:10px;
     margin-top:6px;
     line-height: 30px;
-    background:url(../images/user_name.png) no-repeat;
+    background:url(../images/login/user_name.png) no-repeat;
     border:1px solid #CCCCCC;
     height:30px;
     width:200px;
@@ -56,7 +56,7 @@ img{
     line-height: 30px;
     margin-top:6px;
     margin-left:10px;
-    background:url(../images/user_pwd.png) no-repeat;
+    background:url(../images/login/user_pwd.png) no-repeat;
     border:1px solid #CCCCCC;
     height:30px;
     width:200px;

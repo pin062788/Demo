@@ -167,6 +167,7 @@
     <tr>
         <td width="20%">
             <div class="ui-widget-content">
+                <div class="ui-widget-header ui-state-default"><span class="ui-widget">组织机构</span></div>
                 <div style="margin:5px 0;overflow:auto;height:550px;width:100%;background:#fff;position:">
                     <ul id="orgTree_ul" class="ztree"></ul>
                 </div>
@@ -174,6 +175,7 @@
         </td>
         <td width="60%">
             <div class="ui-widget-content">
+                <div class="ui-widget-header">机构详情</div>
                 <div id="org_form_div" style="margin:5px 0;overflow:auto;height:550px;width:100%;background:#fff;">
 
                 </div>

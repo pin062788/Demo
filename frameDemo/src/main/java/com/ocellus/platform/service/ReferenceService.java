@@ -49,8 +49,7 @@ public class ReferenceService extends AbstractService<Reference, String> {
         return refDAO.getRootNode(code);
     }
 
-    public void addNode(Reference reference) {
-
+    public void addNode(Reference reference) throws Exception {
         super.insert(reference);
     }
 

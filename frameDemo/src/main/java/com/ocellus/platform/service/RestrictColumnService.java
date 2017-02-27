@@ -22,10 +22,9 @@ public class RestrictColumnService extends AbstractService<RestrictColumn, Strin
         this.restrictColumnDAO = restrictColumnDAO;
     }
 
-    public RestrictColumn save(RestrictColumn restrictColumn) {
+    public RestrictColumn save(RestrictColumn restrictColumn) throws Exception {
         if (StringUtil.isEmpty(restrictColumn.getColumnId())) {
             insert(restrictColumn);
-
         } else {
             update(restrictColumn);
         }

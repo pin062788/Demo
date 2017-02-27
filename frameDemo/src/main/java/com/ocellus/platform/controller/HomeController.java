@@ -38,12 +38,14 @@ public class HomeController extends BaseController {
         ModelAndView mv = new ModelAndView("home");
         Map<String, String> requestMap = getParamMap(request);
         User user = userService.getLoginUser();
-        request.getSession().setAttribute("loginUserName", user.getUserName());
-
-        String menu = "{\"menus\": [ {\"menuid\": \"20\", \"icon\": \"icon-log\"," +
-                "\"menuname\": \"\",\"menus\": [] }]}";
-        request.getSession().setAttribute("menu",menu);
-
+        String theme = "start";//"start";
+        /*if(User.RELATED_TYPE_EMPLOYEE.equals(user.getRelatedType())){
+            theme = "default";
+        }else if(User.RELATED_TYPE_SUPPLIER.equals(user.getRelatedType())){
+            theme = "black-tie";
+        }*/
+        request.getSession().setAttribute("theme", theme);
+        request.getSession().setAttribute("loginUserName", user.getRelatedName());
         mv.addAllObjects(requestMap);
         return mv;
     }

@@ -6,6 +6,7 @@ import com.ocellus.platform.dao.GroupUserRoleMappingDAO;
 import com.ocellus.platform.dao.UserGroupDAO;
 import com.ocellus.platform.model.*;
 import com.ocellus.platform.utils.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,10 +67,9 @@ public class UserGroupService extends AbstractService<UserGroup, String> {
         return !groups.isEmpty();
     }
 
-    public UserGroup save(UserGroup userGroup) {
-        if ("".equals(userGroup.getGroupId())) {
+    public UserGroup save(UserGroup userGroup) throws Exception {
+        if (StringUtils.isEmpty(userGroup.getGroupId())) {
             insert(userGroup);
-
         } else {
             update(userGroup);
         }

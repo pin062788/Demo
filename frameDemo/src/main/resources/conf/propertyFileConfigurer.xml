@@ -32,5 +32,5 @@
 		can be moved between tiers without modification.
 	</description>
     
-    <context:property-placeholder location="classpath:conf/db.properties"/>
+    <context:property-placeholder location="classpath:conf/db.properties,classpath:conf/tipsMessage.properties"/>
 </beans>
