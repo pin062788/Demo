@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>警务系统</title>
     <script type="text/javascript">
-        window.location = "${ctx}/main/index.do";
+        window.location = "${ctx}/main/indexHome.do";
     </script>
 </head>
 <body>

@@ -48,7 +48,11 @@
                     onRightClick: function (e, treeId, treeNode) {
                         if (treeNode) {
                             if(treeNode.resourceCode == "0"){
-                                return false;
+                                $("#mEditMenu").hide();
+                                $("#mDelMenu").hide();
+                            }else{
+                                $("#mEditMenu").show();
+                                $("#mDelMenu").show();
                             }
                             var nodes = resourceTree.getSelectedNodes();
                             if (nodes && nodes.length > 0) {
@@ -64,7 +68,11 @@
                     },
                     onDblClick: function (e, treeId, treeNode) {
                         if(treeNode.resourceCode == "0"){
-                            return false;
+                            $("#mEditMenu").hide();
+                            $("#mDelMenu").hide();
+                        }else{
+                            $("#mEditMenu").show();
+                            $("#mDelMenu").show();
                         }
                         if (treeNode.resourceId) {
                             $("#resource_form_div").load("${ctx}/resource/edit.do?resourceId=" + treeNode.resourceId);

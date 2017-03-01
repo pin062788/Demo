@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocellus.business.dao.TestDAO">
+	
+	<resultMap type="Test" id="baseResult">
+		<id column="ID" property="id" />
+		<result column="NAME" property="name"/>
+		<result column="URL" property="url"/>
+
+		<result column="add_user" property="addUser"/>
+		<result column="add_date" property="addDate"/>
+		<result column="add_user" property="addUser"/>
+		<result column="add_date" property="addDate"/>
+		<result column="activate" property="activate"/>
+	</resultMap>
+
+	<sql id="tableAlias">t</sql>
+	<sql id="tableName">TB_TEST</sql>
+
+	<select id="getById" parameterType="String" resultMap="baseResult">
+		SELECT <include refid="tableAlias"/>.*
+		FROM <include refid="tableName"/> <include refid="tableAlias"/>
+		where <include refid="tableAlias"/>.activate = '1' and <include refid="tableAlias"/>.id = #{id}
+	</select>
+
+	<select id="search" parameterType="Map" resultMap="baseResult">
+		SELECT <include refid="tableAlias"/>.*
+		FROM <include refid="tableName"/> <include refid="tableAlias"/>
+		<trim prefix="where" prefixOverrides="and|or">
+			<include refid="tableAlias"/>.activate = '1'
+			<include refid="SQLWhere"/>
+		</trim>
+	</select>
+
+	<sql id="SQLWhere">
+		<if test="id != null and id != '' ">
+			and <include refid="tableAlias"/>.id = #{id}
+		</if>
+		<if test="name != null and name != '' ">
+			and <include refid="tableAlias"/>.name = #{name}
+		</if>
+		<if test="nameLike != null and nameLike != '' ">
+			and <include refid="tableAlias"/>.NAME Like '%${nameLike}%'
+		</if>
+	</sql>
+
+	<insert id="insert" parameterType="Test">
+		INSERT into <include refid="tableName"/>(
+			id,
+			NAME,
+			URL,
+			ADD_USER,
+			ADD_DATE,
+			EDIT_USER,
+			EDIT_DATE,
+			ACTIVATE
+		)VALUES (
+			#{id,jdbcType=CHAR},
+			#{name,jdbcType=VARCHAR},
+			#{url,jdbcType=VARCHAR},
+			#{addUser,jdbcType=VARCHAR},
+			#{addDate,jdbcType=TIMESTAMP},
+			#{editUser,jdbcType=VARCHAR},
+			#{editDate,jdbcType=TIMESTAMP},
+			'1'
+		)
+	</insert>
+
+	<update id="update" parameterType="Test">
+		UPDATE <include refid="tableName"/> 
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				url =#{url,jdbcType=NUMERIC},
+			</if>
+			editDate = #{editDate,jdbcType=TIMESTAMP},
+			editUser = #{editUser,jdbcType=VARCHAR}
+		</set>
+		where ID = #{id,jdbcType=CHAR}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		UPDATE <include refid="tableName"/> SET ACTIVATE = '0' WHERE ID = #{id}
+	</delete>
+
+	<delete id="deleteByIds" parameterType="List">
+		UPDATE <include refid="tableName"/> SET ACTIVATE = '0'
+		WHERE ID IN
+		<foreach collection="list" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

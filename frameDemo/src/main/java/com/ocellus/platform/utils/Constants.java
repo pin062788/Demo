@@ -2,6 +2,8 @@ package com.ocellus.platform.utils;
 
 public class Constants {
 
+    public static final String BUSSINESS_PACKAGE_NAME = "business";
+
     public static final String SESSION_USER_KEY = "_sess_user_key";
     public static final String SESSION_ORG_CODE = "_sess_org_code_";
     public static final String SESSION_TIME_OUT = "999";
@@ -9,6 +11,9 @@ public class Constants {
     public static final String COMA_STR = ",";
     public static final String UNDERLINE_STR = "_";
     public static final String VERTICAL_LINE_STR = "|";
+    public static final String SLASH_STR = "/";
+    public static final String BACKSLASH_STR = "\\";
+
     public static final String BLANK_STR = " ";
     public static final String EMPTY_STR = "";
 

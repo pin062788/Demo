@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
+@RequestMapping("chat")
 public class ChatControlle extends BaseController {
     @ResponseBody
-    @RequestMapping("/chat/getUserList")
+    @RequestMapping("getUserList")
     public List<Map<String, Object>> getUserList(HttpServletRequest request) {
         Map<String, String> param = getParamMap(request);
         String servMsgFlag = param.get("servMsgFlag");
@@ -43,7 +44,7 @@ public class ChatControlle extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping("/chat/getUserLists")
+    @RequestMapping("getUserLists")
     public List<Map<String, Object>> getUserLists(HttpServletRequest request) {
         Map<String, String> param = getParamMap(request);
         String servMsgFlag = param.get("servMsgFlag");
@@ -61,7 +62,7 @@ public class ChatControlle extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/chat/toInstantMessaging")
+    @RequestMapping("toInstantMessaging")
     public ModelAndView toInstantMessagingIndex(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("/chat/index");
         return mv;
@@ -73,14 +74,14 @@ public class ChatControlle extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/chat/openInstantMessaging")
+    @RequestMapping("openInstantMessaging")
     public ModelAndView toInstantMessaging(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("/chat/serverAsk");
         return mv;
     }
 
     @ResponseBody
-    @RequestMapping("/chat/getMessageCount")
+    @RequestMapping("getMessageCount")
     public AjaxView getMessageCount(HttpServletRequest request) {
         AjaxView rtn = new AjaxView();
         String userName = (String) request.getSession().getAttribute("userName");

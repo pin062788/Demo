@@ -33,8 +33,8 @@ public class HomeController extends BaseController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/index")
-    public ModelAndView showIndex(HttpServletRequest request) {
+    @RequestMapping("/indexHome")
+    public ModelAndView showHome(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("home");
         Map<String, String> requestMap = getParamMap(request);
         User user = userService.getLoginUser();
@@ -64,7 +64,7 @@ public class HomeController extends BaseController {
                     AuthenticationToken token = new UsernamePasswordToken(userName, password);
                     Subject currentUser = SecurityUtils.getSubject();
                     currentUser.login(token);
-                    mv.setViewName("redirect:/main/index.do");
+                    mv.setViewName("redirect:/main/indexHome.do");
                     return mv;
                 } catch (Exception e) {
                     logger.error("Error: ", e);

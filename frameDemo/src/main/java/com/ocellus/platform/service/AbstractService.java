@@ -17,6 +17,10 @@ public class AbstractService<T extends AbstractModel, PK extends Serializable> {
         this.dao = dao;
     }
 
+    public T getBaseBean(){
+        return null;
+    }
+
     public void insert(T model)throws Exception {
         model.setDBId(StringUtil.getGUID());
         Date now = new Date();

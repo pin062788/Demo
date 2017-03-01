@@ -27,8 +27,4 @@ public class PageConstants {
 	public static final String BUTTON_SAVE_TEXT = ApplicationContextHolder.getMessage("button.save.text");
 	public static final String BUTTON_CLOSE_TEXT = ApplicationContextHolder.getMessage("button.close.text");
 
-	public static final String IDENTITYCATEGORY_DELETE_FAILED = ApplicationContextHolder.getMessage("delete.failed.identityCategory");
-	public static final String POST_FAILED_CHECK_PROCESSSTATUS_ERROR = ApplicationContextHolder.getMessage("post.failed.check.processstatus.error");
-	
-	public static final String SESSION_USER_KEY = "_sess_user_key";
 }

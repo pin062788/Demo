@@ -67,7 +67,7 @@
 			u.EDIT_USER,
 			u.configure,
 			case when ISNULL(u.user_related_name) THEN e.EMPLOYEE_MC
-			ELSE  u.user_related_name 	END   as user_related_name
+			ELSE u.user_related_name END as user_related_name
 		from tb_user u
 		LEFT JOIN tb_employee e ON e.EMPLOYEE_ID = u.related_id AND e.ACTIVATE = '1'
 	</sql>

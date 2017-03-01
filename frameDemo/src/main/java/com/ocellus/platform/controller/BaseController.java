@@ -11,7 +11,6 @@ import com.ocellus.platform.utils.PageConstants;
 import com.ocellus.platform.utils.StringUtil;
 import com.ocellus.platform.web.view.AjaxView;
 import org.apache.log4j.Logger;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -30,6 +29,7 @@ import java.util.*;
 
 public class BaseController <T extends AbstractModel, PK extends Serializable>{
     protected static Logger logger = Logger.getLogger(BaseController.class);
+    /** common action start**/
     private AbstractService<T, PK> baseService;
     public void setBaseService(AbstractService<T, PK> baseService) {
         this.baseService = baseService;
@@ -43,9 +43,13 @@ public class BaseController <T extends AbstractModel, PK extends Serializable>{
         return this.modelName;
     }
 
+    public String getModelPageRoot() {
+        return Constants.BUSSINESS_PACKAGE_NAME+Constants.SLASH_STR+ getModelName() +Constants.SLASH_STR;
+    }
+
     @RequestMapping("/index")
     public ModelAndView showIndex(HttpServletRequest request) {
-        ModelAndView mv = new ModelAndView(getModelName()+"/"+getModelName()+ PageConstants.SUFFIX_MAIN_PAGE);
+        ModelAndView mv = new ModelAndView(getModelPageRoot()+modelName+ PageConstants.SUFFIX_MAIN_PAGE);
         mv.addObject("modelName",getModelName());
         Map<String, String> requestMap = getParamMap(request);
         mv.addAllObjects(requestMap);
@@ -64,11 +68,11 @@ public class BaseController <T extends AbstractModel, PK extends Serializable>{
 
     @RequestMapping("/editBase")
     public ModelAndView editBase(HttpServletRequest request) {
-        ModelAndView mv = new ModelAndView(getModelName()+"/"+getModelName()+ PageConstants.SUFFIX_EDIT_PAGE);
+        ModelAndView mv = new ModelAndView(getModelPageRoot()+getModelName()+ PageConstants.SUFFIX_EDIT_PAGE);
         mv.addObject("modelName",getModelName());
         Map<String, String> param = getParamMap(request);
         String id = param.get("id");
-        T model = null;
+        T model = baseService.getBaseBean();
         if(!StringUtil.isEmpty(id)){
             model = baseService.getById((PK) id);
         }
@@ -133,6 +137,7 @@ public class BaseController <T extends AbstractModel, PK extends Serializable>{
     }
     public void afterDelete(List<String> idList){
     }
+    /** common action end**/
 
     protected Map<String, String> getParamMap(HttpServletRequest request) {
         Map<String, String> paramMap = new HashMap<String, String>();

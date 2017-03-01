@@ -17,9 +17,9 @@
             userName: {required: "用户名不能为空"},
             password: {required: "密码不能为空"},
             relatedId: {required: "密码不能为空"}
-                ,relatedType:{
-             required:"类型不能为空"
-             }/*,
+            /*  ,relatedType:{
+            required:"类型不能为空"
+             },
              userRelatedName:{required:"名称不能为空"} */
         };
         //需要验证的字段名称和验证规则
@@ -27,9 +27,9 @@
             userName: {required: true},
             password: {required: true},
             relatedId: {required: true}
-              ,relatedType:{
+        /*   ,relatedType:{
              required:true
-             }
+             }*/
             //,userRelatedName:{required:true}
         };
         //封装成MAP类型的对象
@@ -176,7 +176,7 @@
                                 </td>
                                 <td>
                                     <form:input path="relatedName" id="relatedName" /><%-- readonly="true" --%>
-                                    <form:hidden path="relatedId" id="relatedId"/>
+                                    <%--<form:hidden path="relatedId" id="relatedId"/>--%>
                                 </td>
                             </tr>
                         </table>

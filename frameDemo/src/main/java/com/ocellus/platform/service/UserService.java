@@ -143,4 +143,7 @@ public class UserService extends AbstractService<User, String> {
         return null;
     }
 
+    public User getByUserName(String username) {
+        return userDAO.getByUserName(username);
+    }
 }

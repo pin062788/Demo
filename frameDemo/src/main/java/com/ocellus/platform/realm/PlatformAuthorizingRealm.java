@@ -1,7 +1,6 @@
 package com.ocellus.platform.realm;
 
 
-import com.ocellus.platform.dao.UserDAO;
 import com.ocellus.platform.model.User;
 import com.ocellus.platform.service.*;
 import com.ocellus.platform.utils.Constants;
@@ -14,18 +13,12 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 public class PlatformAuthorizingRealm extends AuthorizingRealm {
 
     @Autowired
-    private UserDAO userDao;
-
-    @Autowired
     private ResourceService resourceService;
-
     @Autowired
     private RestrictService restrictService;
-
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -41,10 +34,10 @@ public class PlatformAuthorizingRealm extends AuthorizingRealm {
         if (currentUser != null) {
             user = (User) currentUser.getSession().getAttribute(Constants.SESSION_USER_KEY);
             if (user == null) {
-                user = userDao.getByUserName(username);
+                user = userService.getByUserName(username);
             }
         } else if (username != null) {
-            user = userDao.getByUserName(username);
+            user = userService.getByUserName(username);
         }
         if (user != null) {//所属公司
             userService.getUserZygs(user);
@@ -60,7 +53,7 @@ public class PlatformAuthorizingRealm extends AuthorizingRealm {
         String username = token.getUsername();
 
         if (username != null && !"".equals(username)) {
-            User user = userDao.getByUserName(username);
+            User user = userService.getByUserName(username);
             if (user != null) {
                 //所属公司
                 userService.getUserZygs(user);
@@ -72,7 +65,6 @@ public class PlatformAuthorizingRealm extends AuthorizingRealm {
                 return new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(), getName());
             }
         }
-
         return null;
     }
 
