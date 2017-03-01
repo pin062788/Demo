@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS `tb_test`;
-CREATE TABLE `tb_test` (
+CREATE TABLE `tb_test` ( 
   `id` char(32) NOT NULL,
   `name` varchar(20) COLLATE utf8_bin NOT NULL,
   `url` varchar(200) COLLATE utf8_bin DEFAULT NULL,
