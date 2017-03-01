@@ -146,8 +146,9 @@ function openTabByUrl(url,params){
 				url = ctx +  url
 			}else{
 				url = ctx +  url+"?"+params;
+				$("#" + panelId).html('<iframe name="target'+rawId+'" scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>');
+
 			}
-			$("#" + panelId).html('<iframe name="target'+rawId+'" scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>');
 		}
 	});
 	if(!tabExist){ //如果Tab不存在添加一个新Tab
