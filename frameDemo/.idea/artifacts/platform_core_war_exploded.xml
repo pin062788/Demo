@@ -73,7 +73,7 @@
           <element id="library" level="project" name="Maven: taglibs:standard:1.1.2" />
           <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:4.2.0.Final" />
-          <element id="library" level="project" name="Maven: org.json:json:1.0" />
+          <element id="library" level="project" name="Maven: org.json:json:20160212" />
           <element id="library" level="project" name="Maven: org.apache.poi:poi:3.9" />
           <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml:3.9" />
           <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml-schemas:3.9" />

@@ -110,7 +110,14 @@
                 pager: "#userPager",
                 viewrecords: true,
                 height: "auto",
-                //width: "auto",
+                loadComplete: function() {
+                    var grid = $("#userManagement");
+                    var ids = grid.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        grid.setRowData ( ids[i], false, {height: 35+i*2} );
+                    }
+                },
+                caption:"用户管理",
                 autowidth: true,
                 gridview: true,
                 autoencode: true,
@@ -135,14 +142,12 @@
 <div id="query" class="ui-widget-content">
     <div id="toolbar" class="ui-widget-header ui-state-default">
         <div>
-            <shiro:hasPermission name="user:view">
-                <button id="findUserBtn">查询</button>
-            </shiro:hasPermission>
+
             <shiro:hasPermission name="user:add">
-                <button id="addUserBtn">增加</button>
+                <button id="addUserBtn">新建</button>
             </shiro:hasPermission>
             <shiro:hasPermission name="user:edit">
-                <button id="modifyUserBtn">修改</button>
+                <button id="modifyUserBtn">更新</button>
             </shiro:hasPermission>
             <shiro:hasPermission name="user:delete">
                 <button id="delUserBtn">删除</button>
@@ -150,16 +155,21 @@
         </div>
     </div>
     <div id="criterion">
-        <form:form commandName="role">
-            <table cellspacing="5" cellpadding="5">
-                <tr>
-                    <td align="right"><label>用户名：</label></td>
-                    <td><input type="text" id="user_name"></td>
-                    <td align="right"><label>名称：</label></td>
-                    <td><input type="text" id="rName" name="rName"></td>
-                </tr>
+        <form id="userQueryForm">
+            <table>
+                <tr><td >
+                    <div class="criteria_float_div">
+                        <ul>
+                            <li ><label>用户名：</label><input type="text" id="user_name"></li>
+                            <li><label>名称：</label><input type="text" id="rName" name="rName"></li>
+                            <li class="queryButton">
+                                <button id="findUserBtn">查询</button>
+                            </li>
+                        </ul>
+                    </div>
+                </td></tr>
             </table>
-        </form:form>
+        </form>
     </div>
     <table id="userManagement"></table>
     <div id="userPager"></div>

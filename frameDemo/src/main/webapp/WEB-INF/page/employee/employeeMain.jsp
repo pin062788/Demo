@@ -111,7 +111,15 @@
             total: 15,
             rowList: [10, 20, 30],
             pager: "#renYuanWeiHuGridPager",
+            caption:"人员维护",
             viewrecords: true,
+            loadComplete: function() {
+                var grid = $("#renYuanWeiHuGridList");
+                var ids = grid.getDataIDs();
+                for (var i = 0; i < ids.length; i++) {
+                    grid.setRowData ( ids[i], false, {height: 35+i*2} );
+                }
+            },
             height: "auto",
             autowidth: true,
             gridview:true,
@@ -132,21 +140,24 @@
 <div class="ui-widget-content">
     <div id="renYuanWeiHu_toolBar" class="ui-widget-header ui-state-default">
          <div>
-            <button id="renYuanWeiHu_SearchBtn">查询</button>
-            <button id="renYuanWeiHu_AddBtn">新增</button>
-            <button id="renYuanWeiHu_EditBtn">修改</button>
+            <button id="renYuanWeiHu_AddBtn">新建</button>
+            <button id="renYuanWeiHu_EditBtn">更新</button>
             <button id="renYuanWeiHu_DeleBtn">删除</button>
         </div>
     </div>
     <div id="renYuanWeiHu_criterion" >
         <form id="renYuanWeiHuQueryForm">
-            <table cellspacing="5" cellpadding="5" >
-                <tr>
-                    <td align="right"><label>人员名称：</label></td>
-                    <td>
-                        <input type="text" id="renYuanWeiHuMc" name="renYuanWeiHuMc">
-                    </td>
-                </tr>
+            <table  ><tr><td >
+                    <div class="criteria_float_div">
+                        <ul><li >
+                            <label>人员名称：</label>
+                            <input type="text" id="renYuanWeiHuMc" name="renYuanWeiHuMc">
+                        </li>
+                        <li class="queryButton">
+                            <button id="renYuanWeiHu_SearchBtn">查询</button>
+                        </li></ul>
+                    </div>
+                </td ></tr>
             </table>
         </form>
     </div>

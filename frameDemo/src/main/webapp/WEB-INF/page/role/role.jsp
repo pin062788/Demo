@@ -9,72 +9,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <jsp:include page="/common/common.jsp" />
     <script type="text/javascript">
-
-        function deleteRoles() {
-            var rowIds = $("#roleList").jqGrid('getGridParam', 'selarrrow');
-            var count = rowIds.length;
-            if (count == 0)
-                alert("请选择一行数据");
-            else {
-                var r = confirm("是否确认删除，删除后相应用户的权限也将被删除，且无法恢复？");
-                if (r == true) {
-                    var roleIds = new Array(rowIds.length);
-                    for (var i = 0; i < rowIds.length; i++) {
-                        var rowData = $("#roleList").getRowData(rowIds[i]);
-                        roleIds[i] = rowData.roleId;
-                    }
-                    $.ajax({
-                                type: "POST",
-                                url: "${pageContext.request.contextPath}/role/delete/" + roleIds + ".do?",
-                                dataType: "json"
-                            })
-                            .done(function (data) {
-                                if (data.status == 1) {
-                                    alert('删除成功');
-                                    $("#roleList").jqGrid().trigger("reloadGrid");
-                                } else {
-                                    alert(data.message);
-                                }
-                            })
-                            .fail(function () {
-                                alert('删除失败！');
-                            })
-                    ;
-                }
-            }
-        }
-
-        function openResourcesTree() {
-            var row = selectRows("roleList", false, false);
-            if (row) {
-                $.ajax({
-                    type: "POST",
-                    url: "${pageContext.request.contextPath}/resource/openResourceTree/" + row[0].roleId + ".do?",
-                    dataType: "html",
-                    success: function (data) {
-                        $("#resourceDialog").html(data).dialog("open");
-                    }
-                }).fail(function () {
-                    alert("加载失败");
-                });
-            }
-        }
-
-        function showDataConfig() {
-            var row = selectRows("roleList", false, false);
-            if (row) {
-                var url = "${ctx}/role/showDataConfig.do?roleId="+row[0].roleId;
-                $.post(_url,"",function(data){
-                    $("#dataConfigDialog").dialog("open").html(data);
-                }).fail(function(){
-                    alert("加载失败!");
-                });
-                /*$.loadDiv("dataConfigDialog", url, {roleId: row[0].roleId});
-                $("#dataConfigDialog").dialog("open").dialog("option", "title", "数据权限设置");*/
-            }
-
-        }
-
         $(document).ready(function () {
             $("#resourceDialog").dialog({
                 title: "角色管理 ->权限设置",
@@ -105,30 +39,26 @@
 
             $("#searchBtn").button({//searchBtn
                 icons: {primary: "ui-icon-search"}
-            })
-            .click(function () {
+            }).click(function () {
                 var _number = encodeURI($("#roleCode").val());
                 var _name = encodeURI($("#roleName").val());
                 $("#roleList").jqGrid('setGridParam', {
                     url: "${pageContext.request.contextPath}/role/getList.do?roleCode=" + _number + "&roleName=" + _name
                 }).trigger("reloadGrid");
-
             });
-            $("#addBtn").click(function () {
+            $("#addBtn").button({
+                icons: {primary: "ui-icon-plus"}
+            }).click(function () {
                 var url = "${pageContext.request.contextPath}/role/add.do";
                 $.post(url,"",function(data){
                     $("#roleDialog").dialog("open").html(data);
                 }).fail(function(){
                     alert("加载失败!");
                 });
-            })
-            .button({
-                icons: {primary: "ui-icon-plus"}
             });
             $("#editBtn").button({
                 icons: {primary: "ui-icon-pencil"}
-            })//editBtn
-            .click(function () {
+            }).click(function () {
                 var row = selectRows("roleList", false, false);
                 if (row) {
                     var url = "${pageContext.request.contextPath}/role/edit.do?roleId=" + row[0].roleId;
@@ -139,27 +69,21 @@
                     });
                 }
             });
-            $("#deleteBtn") //deleteBtn
-            .button({
+            $("#deleteBtn").button({
                 icons: {primary: "ui-icon-trash"}
-            })
-            .click(function () {
+            }).click(function () {
                 deleteRoles();
             });
-            $("#setResourceBtn") //setResourceBtn
-            .button({
+            $("#setResourceBtn").button({
                 icons: {primary: "ui-icon-gear"}
-            })
-            .click(function () {
+            }).click(function () {
                 openResourcesTree();
             });
-            $("#setDataFilterBtn")
-            .button({
+            $("#setDataFilterBtn") .button({
                 icons: {primary: "ui-icon-gear"}
-            })
-            .click(function () {
+            }).click(function () {
                 showDataConfig();
-            });  //.parent().buttonset()
+            });
             $("#roleList").jqGrid({
                 url: "${pageContext.request.contextPath}/role/getList.do",
                 datatype: "json",
@@ -184,6 +108,14 @@
                 pager: "#rolePager",
                 viewrecords: true,
                 height: "auto",
+                loadComplete: function() {
+                    var grid = $("#roleList");
+                    var ids = grid.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        grid.setRowData ( ids[i], false, {height: 35+i*2} );
+                    }
+                },
+                caption:"角色管理",
                 autowidth: true,
                 gridview: true,
                 autoencode: true,
@@ -196,20 +128,79 @@
                 search: false
             });
         });
+        function deleteRoles() {
+            var rowIds = $("#roleList").jqGrid('getGridParam', 'selarrrow');
+            var count = rowIds.length;
+            if (count == 0)
+                alert("请选择一行数据");
+            else {
+                var r = confirm("是否确认删除，删除后相应用户的权限也将被删除，且无法恢复？");
+                if (r == true) {
+                    var roleIds = new Array(rowIds.length);
+                    for (var i = 0; i < rowIds.length; i++) {
+                        var rowData = $("#roleList").getRowData(rowIds[i]);
+                        roleIds[i] = rowData.roleId;
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/role/delete/" + roleIds + ".do?",
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.status == 1) {
+                            alert('删除成功');
+                            $("#roleList").jqGrid().trigger("reloadGrid");
+                        } else {
+                            alert(data.message);
+                        }
+                    }).fail(function () {
+                        alert('删除失败！');
+                    });
+                }
+            }
+        }
+
+        function openResourcesTree() {
+            var row = selectRows("roleList", false, false);
+            if (row) {
+                $.ajax({
+                    type: "POST",
+                    url: "${pageContext.request.contextPath}/resource/openResourceTree/" + row[0].roleId + ".do?",
+                    dataType: "html",
+                    success: function (data) {
+                        $("#resourceDialog").html(data).dialog("open");
+                    }
+                }).fail(function () {
+                    alert("加载失败");
+                });
+            }
+        }
+
+        function showDataConfig() {
+            var row = selectRows("roleList", false, false);
+            if (row) {
+                var url = "${ctx}/role/showDataConfig.do?roleId="+row[0].roleId;
+                $.post(_url,"",function(data){
+                    $("#dataConfigDialog").dialog("open").html(data);
+                }).fail(function(){
+                    alert("加载失败!");
+                });
+                /*$.loadDiv("dataConfigDialog", url, {roleId: row[0].roleId});
+                 $("#dataConfigDialog").dialog("open").dialog("option", "title", "数据权限设置");*/
+            }
+        }
+
     </script>
 </head>
 <body id="loading">
 <div class="ui-widget-content">
     <div id="toolbar" class="ui-widget-header ui-state-default">
         <div id="btns">
-            <shiro:hasPermission name="role:view">
-                <button id="searchBtn">查询</button>
-            </shiro:hasPermission>
+
             <shiro:hasPermission name="role:add">
-                <button id="addBtn">增加</button>
+                <button id="addBtn">新建</button>
             </shiro:hasPermission>
             <shiro:hasPermission name="role:edit">
-                <button id="editBtn">修改</button>
+                <button id="editBtn">更新</button>
             </shiro:hasPermission>
             <shiro:hasPermission name="role:delete">
                 <button id="deleteBtn">删除</button>
@@ -223,13 +214,16 @@
         </div>
     </div>
     <div id="criterion">
-        <table cellspacing="5" cellpadding="5" border="0">
-            <tr>
-                <td>角色编码：</td>
-                <td><input type="text" id="roleCode"/></td>
-                <td>角色名称：</td>
-                <td><input type="text" id="roleName"/></td>
-            </tr>
+        <table >
+            <tr><td >
+                <div class="criteria_float_div">
+                    <ul>
+                        <li><label>角色编码：</label><input type="text" id="roleCode"/></li>
+                        <li><label>角色名称：</label><input type="text" id="roleName"/></li>
+                        <li class="queryButton"><button id="searchBtn">查询</button></li>
+                    </ul>
+                </div>
+            </td></tr>
         </table>
     </div>
     <table id="roleList"></table>

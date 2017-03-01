@@ -101,13 +101,7 @@
                 alert("请先选择一个节点");
                 return;
             }
-
             currentParentNode = nodes[0].parentTId;
-            /* $.post("
-            ${pageContext.request.contextPath}/reference/delete.do?",{id:nodes[0].id},function(data){
-             var node = $.fn.zTree.getZTreeObj("referenceTreeMenu").getNodeByTId(currentParentNode);
-             zTree.reAsyncChildNodes(node,"refresh");
-             });*/
             var getTimestamp = new Date().getTime();
             var url = "${pageContext.request.contextPath}/reference/delete.do?_timer_=" + getTimestamp;
             $.post(url, {id: nodes[0].id}, function (data) {
@@ -142,7 +136,7 @@
 <body id="loading">
 <table cellspacing="5" cellpadding="5" width="100%" border="0">
     <tr>
-        <td width="40%">
+        <td width="30%">
             <div class="ui-widget-content">
                 <div class="ui-widget-header ui-state-default"><span class="ui-widget">所有资源</span></div>
                 <div style="margin:5px 0;overflow:auto;height:550px;width:100%;background:#fff;position:">
@@ -158,7 +152,7 @@
             </div>
             </div>
         </td>
-        <td width="60%">
+        <td width="70%">
             <div class="ui-widget-content">
                 <div class="ui-widget-header">节点明细</div>
                 <div id="reference_form_div"

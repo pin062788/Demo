@@ -99,7 +99,14 @@
                 pager: "#userGroupsPager",
                 viewrecords: true,
                 height: "auto",
-                //width: "auto",
+                loadComplete: function() {
+                    var grid = $("#userGroups");
+                    var ids = grid.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        grid.setRowData ( ids[i], false, {height: 35+i*2} );
+                    }
+                },
+                caption:"用户组管理",
                 autowidth: true,
                 gridview: true,
                 autoencode: true,
@@ -128,14 +135,11 @@
 <div id="query" class="ui-widget-content">
     <div id="toolbar" class="ui-widget-header ui-state-default">
         <div>
-            <shiro:hasPermission name="usergroup:view">
-                <button id="findUserGroupBtn">查询</button>
-            </shiro:hasPermission>
             <shiro:hasPermission name="usergroup:add">
-                <button id="addUserGroupBtn">增加</button>
+                <button id="addUserGroupBtn">新建</button>
             </shiro:hasPermission>
             <shiro:hasPermission name="usergroup:edit">
-                <button id="modifyUserGroupBtn">修改</button>
+                <button id="modifyUserGroupBtn">更新</button>
             </shiro:hasPermission>
             <shiro:hasPermission name="usergroup:delete">
                 <button id="delUserGroupBtn">删除</button>
@@ -143,14 +147,20 @@
         </div>
     </div>
     <div id="criterion">
-        <form:form commandName="role">
-            <table cellspacing="5" cellpadding="5">
-                <tr>
-                    <td align="right"><label>用户组名：</label></td>
-                    <td><input type="text" id="userGroup_name"></td>
-                </tr>
+        <form id="userGroupQueryForm">
+            <table >
+                <tr><td >
+                    <div class="criteria_float_div">
+                    <ul>
+                        <li ><label>用户组名：</label><input type="text" id="userGroup_name"></li>
+                        <li class="queryButton">
+                            <button id="findUserGroupBtn">查询</button>
+                        </li>
+                    </ul>
+                    </div>
+                </td></tr>
             </table>
-        </form:form>
+        </form>
     </div>
     <table id="userGroups"></table>
     <div id="userGroupsPager"></div>

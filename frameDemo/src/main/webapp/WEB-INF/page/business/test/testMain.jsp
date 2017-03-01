@@ -92,7 +92,7 @@
                         alert(result.message);
                         if(result.status=="1"){
                             $("#jqGrid_${modelName}").jqGrid('setGridParam',{
-                                url: "${pageContext.request.contextPath}/${modelName}/getList.do?"+encodeURI($("#queryForm_${modelName}").serialize()),
+                                url: "${pageContext.request.contextPath}/${modelName}/getBaseList.do?"+encodeURI($("#queryForm_${modelName}").serialize()),
                                 page:1
                             }).trigger("reloadGrid");
                         }
@@ -126,8 +126,8 @@
                         grid.setRowData ( ids[i], false, {height: 35+i*2} );
                     }
                 },
-                height:'auto',
                 caption:"测试",
+                height:'auto',
                 rownumbers:true,
                 autowidth:true,
                 viewrecords: true,

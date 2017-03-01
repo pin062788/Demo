@@ -25,7 +25,7 @@
                 </div>
                 <div style="position:relative;top:5px;right:125px;float:right;text-align: left; color: #000000;
                     font-size: 12px;">
-                	<span >${loginUserName} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                	<span >欢迎  &nbsp;&nbsp;${loginUserName}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <span><a href="${ctx}/main/logout.do" target="_parent" onclick="return self.confirm('确定要注销登录吗?')">注销</a></span>
                 </div>
                 <div style="position:relative;top:5px;right:200px;float:right;text-align: left; color:black;">
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="pane ui-layout-center" style="height:100%; width:100%;padding:0px 2px 0px 2px;">
+        <div class="pane ui-layout-center" style="height:100%; width:100%;padding:0px 2px 0px 2px;overflow-y: hidden;">
             <div id="content_div" style="height:100%;width:100%;">
                 <div id="mainTabs">
                     <ul id="mainTabsUl" class="tabsUl">
